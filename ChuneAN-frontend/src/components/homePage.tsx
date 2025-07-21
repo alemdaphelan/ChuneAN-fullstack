@@ -33,7 +33,7 @@ export default function HomePage(){
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem]">
                 <div className="flex gap-[1rem] pr-[4rem] item-center">
                     <img alt="logo" src="src\assets\logo.jpg" className="w-[3rem] h-[3rem]"/>
-                    <Link className="text-[2rem] font-semibold" to='/'>Bandalem</Link>
+                    <Link className="text-[2rem] font-semibold" to='/'>ChuneAN</Link>
                 </div>
                 <Link className="text-[#b9babd] hover:text-white" to="feed">Feed</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="library">Library</Link>

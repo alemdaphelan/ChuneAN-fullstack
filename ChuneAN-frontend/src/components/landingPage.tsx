@@ -11,7 +11,7 @@ function LandingPage(){
         <div className=" text-white p-[1rem] pb-[3rem] bg-black">
             <header className="mb-[2rem] text-center flex flex-col gap-[1.5rem]">
                 <h1 className="text-5xl font-bold">Make music connect with others</h1>
-                <p className="text-[#B3B3B3]">Create, share, and discover music with Bandalem</p>
+                <p className="text-[#B3B3B3]">Create, share, and discover music with ChuneAN</p>
                 <Link to="/auth" className="font-bold rounded-[10px] text-black px-[1rem] py-[0.5rem] bg-[#1DB954] w-[10rem] m-auto cursor-pointer hover:scale-105">GET STARTED</Link>
                 <Outlet/>
             </header>
