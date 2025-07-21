@@ -27,7 +27,7 @@ function LandingPage(){
                 <div className="grid grid-rows-2 grid-cols-2 text-[1rem] max-w-[600px] m-auto text-center">
                     <div className="flex gap-[1rem]">
                         <IoIosMail className="text-[1.5rem]"/>
-                        <p>bandalem19072025@gmail.com</p>
+                        <p>ChuneAN19072025@gmail.com</p>
                     </div>
                     <div className="flex gap-[1rem]">
                         <FaPhoneAlt className="text-[1.5rem]"/>
@@ -35,7 +35,7 @@ function LandingPage(){
                     </div>
                     <div className="flex gap-[1rem]">
                         <FaFacebook className="text-[1.5rem]"/>
-                        <p>Bandalem FnD</p>
+                        <p>ChuneAN FnD</p>
                     </div>
                     <div className="flex gap-[1rem]">
                         <FaLocationDot className="text-[1.5rem]"/>
