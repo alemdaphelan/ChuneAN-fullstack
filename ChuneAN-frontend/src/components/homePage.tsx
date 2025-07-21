@@ -2,7 +2,7 @@ import {useEffect,useState} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
 export default function HomePage(){
     const navigate = useNavigate();
-    const [data,setData] = useState<any[]>([]);
+    const [_data,setData] = useState<any[]>([]);
     useEffect(()=>{
         const store = localStorage.getItem("user");
         if(!store){
