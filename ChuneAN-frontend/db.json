@@ -1,0 +1,95 @@
+{
+    "users": [
+        {
+            "id": 1,
+            "username": "alemm",
+            "email":"lamto20050505@gmail.com",
+            "password":"123",
+            "avatar": "/avatars/alemm.png",
+            "birthday":"05-05-2005",
+            "bio":"I am a artist",
+            "create_at": "",
+            "band_id":""
+        },
+        {
+            "id": 2,
+            "username": "johnny",
+            "email":"johnny@gmail.com",
+            "password":"321",
+            "avatar": "/avatars/johnny.png",
+            "birthday":"24-5-2001",
+            "bio":"I am a listener",
+            "create_at": "",
+            "band_id":""
+        }
+    ],
+    "projects": [
+        {
+            "id": 1,
+            "title": "Lo-fi Chill",
+            "userId": 1,
+            "createdAt": "2025-07-20T09:00:00Z"
+        },
+        {
+            "id": 2,
+            "title": "Trap Beat Vol.1",
+            "userId": 2,
+            "createdAt": "2025-07-19T10:00:00Z"
+        }
+    ],
+    "posts": [
+        {
+            "id": 1,
+            "projectId": 1,
+            "userId": 1,
+            "content": "Just finished this lo-fi beat 🎧",
+            "audioUrl": "/audios/lofi1.mp3",
+            "createdAt": "2025-07-20T09:15:00Z"
+        },
+        {
+            "id": 2,
+            "projectId": 2,
+            "userId": 2,
+            "content": "Check out my latest trap drop 🔥",
+            "audioUrl": "/audios/trap1.mp3",
+            "createdAt": "2025-07-19T10:30:00Z"
+        }
+    ],
+    "comments": [
+        {
+            "id": 1,
+            "postId": 1,
+            "userId": 2,
+            "text": "Chill vibe bro 💯",
+            "createdAt": "2025-07-20T09:30:00Z"
+        },
+        {
+            "id": 2,
+            "postId": 2,
+            "userId": 1,
+            "text": "That 808 hits hard 🔥",
+            "createdAt": "2025-07-19T10:45:00Z"
+        }
+    ],
+    "likes": [
+        {
+            "id": 1,
+            "postId": 1,
+            "userId": 2
+        },
+        {
+            "id": 2,
+            "postId": 2,
+            "userId": 1
+        }
+    ],
+    "notifications": [
+        {
+            "id": 1,
+            "userId": 1,
+            "message": "johnny commented on your post",
+            "createdAt": "2025-07-20T09:31:00Z",
+            "read": false
+        }
+    ]
+}
