@@ -9,6 +9,7 @@ public class ChuneAnApplication {
     public static void main(String[] args) {
 
         SpringApplication.run(ChuneAnApplication.class, args);
+        System.out.print("Hello world!");
 
     }
 
