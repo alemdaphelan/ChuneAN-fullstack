@@ -7,9 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ChuneAnApplication {
 
     public static void main(String[] args) {
-
         SpringApplication.run(ChuneAnApplication.class, args);
-
+        System.out.println("Hello");
     }
 
 }
