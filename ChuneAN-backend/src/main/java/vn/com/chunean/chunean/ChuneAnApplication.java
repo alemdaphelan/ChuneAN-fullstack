@@ -10,7 +10,7 @@ public class ChuneAnApplication {
 
         SpringApplication.run(ChuneAnApplication.class, args);
         System.out.print("Hello world!");
-
+        System.out.print("Con cac github")
     }
 
 }
