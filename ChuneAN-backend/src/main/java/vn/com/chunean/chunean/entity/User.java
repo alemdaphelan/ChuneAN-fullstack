@@ -3,6 +3,7 @@ package vn.com.chunean.chunean.entity;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.UUID;
 
 import lombok.*;
@@ -16,7 +17,7 @@ import lombok.*;
 @Table(name = "Users")
 public class User {
     @Id
-    @Column(name = "UserID", length = 30)
+    @Column(name = "UserID", length = 36)
     private String id = UUID.randomUUID().toString();
     @Column(name = "UserName", nullable = false, unique = true, length = 50)
     private String username;
@@ -38,6 +39,7 @@ public class User {
         this.password = password;
         this.email = email;
         this.birth = birth;
+        this.createdAt = LocalDate.now();
     }
 
     public Object getPassword() {return password;

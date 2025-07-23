@@ -1,11 +1,12 @@
 import { FaFacebookF } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
-import { useState, useRef, useEffect} from "react"
+import {useState, useRef, useEffect, type ChangeEvent} from "react"
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import * as React from "react";
 export default function Login() {
     const formRef = useRef<HTMLDivElement>(null);
-
     const [usernameOrEmail,setUserNameOrEmail] = useState("");
     const [password,setPassword] = useState("");
     const navigate = useNavigate();
@@ -24,14 +25,52 @@ export default function Login() {
 
     const handleLogIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const res = await fetch(`http://localhost:3000/users?username=${usernameOrEmail}&password=${password}`);
-        const data = await res.json();
-        if (data.length > 0) {
-            localStorage.setItem("user", JSON.stringify(data[0]));
-            navigate("/home");
+        if(!usernameOrEmail || !password){
+            alert("Vui long tai khoan hoac mat khau");
+            return;
         }
-        else{
-            alert("Sai tai khoan hoac mat khau");
+        try{
+            const res = await axios.post(`http://localhost:8080/api/users/login`,{
+                usernameOrEmail,
+                password
+            });
+
+            if(res.status === 200){
+                const data = res.data;
+                localStorage.setItem("user",data);
+                navigate("/home");
+            }
+        }
+        catch(err){
+            alert("Khong the dang nhap");
+            console.error(err);
+        }
+    }
+    const [username,setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [birthday,setBirthday] = useState("");
+    const handleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) =>{
+        e.preventDefault();
+        if(!username || !email || !birthday || !password){
+            alert("Vui long dien day du thong tin");
+            return;
+        }
+        try{
+            const res = await axios.post("http://localhost:8080/api/users/signin",{
+                username,
+                email,
+                password,
+                birthday
+            });
+            if(res.status === 200){
+                const data = res.data;
+                localStorage.setItem("user",data);
+                navigate("/home");
+            }
+        }
+        catch(err){
+            console.error(err);
+            alert("Khong the dang ky");
         }
     }
 
@@ -43,13 +82,13 @@ export default function Login() {
                 Sign up
             </h1>
             <form className="flex flex-col gap-[1rem]">
-                <input name="username" type="text"
+                <input onChange={(e:ChangeEvent<HTMLInputElement>)=>setUsername(e.target.value)} name="username" type="text"
                     placeholder="Username"
                     className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
-                <input name="email" placeholder="Email" type="email" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
-                <input name="password" placeholder="Password" type="password" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
-                <input name="birthday" placeholder="birthday" type="text" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
-                <button onClick={handleLogIn} className="w-full h-full bg-[#4E6EFF] py-[.5rem] cursor-pointer hover:bg-[#4CFFA8] hover:text-[black] rounded-[10px] text-xl">Sign up</button>
+                <input onChange={(e:ChangeEvent<HTMLInputElement>)=>setEmail(e.target.value)} name="email" placeholder="Email" type="email" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
+                <input onChange={(e:ChangeEvent<HTMLInputElement>)=>setPassword(e.target.value)} name="password" placeholder="Password" type="password" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
+                <input onChange={(e:ChangeEvent<HTMLInputElement>)=>setBirthday(e.target.value)} name="birthday" placeholder="birthday" type="text" className="border-[3px] border-[#2A2A2A] bg-[#1E1E1E] placeholder-[#B3B3B3] w-[15rem] h-[3rem] px-[1rem] rounded-[10px]" />
+                <button onClick={handleSignIn} className="w-full h-full bg-[#4E6EFF] py-[.5rem] cursor-pointer hover:bg-[#4CFFA8] hover:text-[black] rounded-[10px] text-xl">Sign up</button>
             </form>
             <div className="flex justify-center gap-[.5rem] text-[#B3B3B3]">
                 <div className="border-b-[2px] border-[#2A2A2A] w-[6.5rem]"></div>

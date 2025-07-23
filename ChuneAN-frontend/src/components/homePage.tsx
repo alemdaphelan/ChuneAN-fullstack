@@ -2,20 +2,21 @@ import {useEffect,useState} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
 export default function HomePage(){
     const navigate = useNavigate();
-    const [_data,setData] = useState<any[]>([]);
+    const [_data,_setData] = useState<any[]>([]);
     useEffect(()=>{
         const store = localStorage.getItem("user");
         if(!store){
             navigate('/');
             return;
         }
+        /*
         const user = JSON.parse(store);
         if(!user){
             navigate('/');
             return;
         }
         const getData = async() =>{
-            try{const res = await fetch('http://localhost/users');
+            try{const res = await fetch('http://localhost:8080/api/users/');
                 const json = await res.json();
                 if(!Array.isArray(json) || !json.length){
                     return
@@ -27,12 +28,13 @@ export default function HomePage(){
             }
         }
         getData();
-    });
+         */
+    },[]);
     return(
         <div className="text-white bg-black min-h-screen">
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem]">
                 <div className="flex gap-[1rem] pr-[4rem] item-center">
-                    <img alt="logo" src="src\assets\logo.jpg" className="w-[3rem] h-[3rem]"/>
+                    <img alt="logo" src="ChuneAN-frontend/public/logo.jpg" className="w-[3rem] h-[3rem]"/>
                     <Link className="text-[2rem] font-semibold" to='/'>ChuneAN</Link>
                 </div>
                 <Link className="text-[#b9babd] hover:text-white" to="feed">Feed</Link>

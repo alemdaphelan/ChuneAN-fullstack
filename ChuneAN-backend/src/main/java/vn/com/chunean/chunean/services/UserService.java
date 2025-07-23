@@ -1,5 +1,6 @@
 package vn.com.chunean.chunean.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.entity.User;
 
@@ -14,9 +15,13 @@ import java.util.List;
 @Setter
 @Service
 public class UserService {
+    @Autowired
     UserRepository userRepository;
     public List<User> getAllUser(){
         return userRepository.findAll();
+    }
+    public User getUserById(String id){
+        return userRepository.findById(id).orElse(null);
     }
     public User getUserByEmailOrUsername(String username, String email){
         return userRepository.findByUsernameOrEmail(username,email);
