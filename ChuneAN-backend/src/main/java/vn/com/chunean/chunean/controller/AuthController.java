@@ -17,7 +17,7 @@ import java.time.Duration;
 @Getter
 @Setter
 @RestController
-@RequestMapping("api/users")
+@RequestMapping("/api/users")
 
 public class AuthController {
 
