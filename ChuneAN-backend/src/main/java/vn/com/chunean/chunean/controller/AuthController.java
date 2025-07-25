@@ -1,6 +1,5 @@
 package vn.com.chunean.chunean.controller;
 import lombok.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -14,16 +13,29 @@ import vn.com.chunean.chunean.services.UserService;
 
 import java.time.Duration;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @RestController
 @RequestMapping("api/users")
 
 public class AuthController {
-    UserService userService;
-    JwtService jwtService;
+
+    final UserService userService;
+    final JwtService jwtService;
+
+    public ResponseCookie buildCookie(String id){
+        String token = jwtService.generateJwt(id);
+        return ResponseCookie.from("jwt",token)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .domain("localhost")
+                .maxAge(Duration.ofHours(24))
+                .sameSite("None")
+                .build();
+    }
+
     @PostMapping("login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         String usernameOrEmail = loginRequest.getUsernameOrEmail();
@@ -32,15 +44,7 @@ public class AuthController {
         if(user == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect username or password");
         }
-        String token = jwtService.generateJwt(user.getId());
-        ResponseCookie cookie = ResponseCookie.from("jwt",token)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .domain("localhost")
-                .maxAge(Duration.ofHours(24))
-                .sameSite("None")
-                .build();
+        ResponseCookie cookie = buildCookie(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE,cookie.toString())
@@ -64,16 +68,7 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Cannot create user");
         }
-
-        String token = jwtService.generateJwt(user.getId());
-        ResponseCookie cookie = ResponseCookie.from("jwt",token)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .domain("localhost")
-                .maxAge(Duration.ofHours(24))
-                .sameSite("None")
-                .build();
+        ResponseCookie cookie = buildCookie(user.getId());
 
         return  ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE,cookie.toString())

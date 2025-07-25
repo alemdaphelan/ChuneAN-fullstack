@@ -12,14 +12,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @Service
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
+    final UserRepository userRepository;
     public List<User> getAllUser(){
         return userRepository.findAll();
     }
