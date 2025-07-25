@@ -24,7 +24,7 @@ public class AuthController {
     final UserService userService;
     final JwtService jwtService;
 
-    public ResponseCookie buildCookie(String id){
+    private ResponseCookie buildCookie(String id){
         String token = jwtService.generateJwt(id);
         return ResponseCookie.from("jwt",token)
                 .httpOnly(true)

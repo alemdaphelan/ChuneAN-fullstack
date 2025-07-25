@@ -34,7 +34,7 @@ export default function HomePage(){
         <div className="text-white bg-black min-h-screen">
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem]">
                 <div className="flex gap-[1rem] pr-[4rem] item-center">
-                    <img alt="logo" src="ChuneAN-frontend/public/logo.jpg" className="w-[3rem] h-[3rem]"/>
+                    <img alt="logo" src="/logo.jpg" className="w-[3rem] h-[3rem]"/>
                     <Link className="text-[2rem] font-semibold" to='/'>ChuneAN</Link>
                 </div>
                 <Link className="text-[#b9babd] hover:text-white" to="feed">Feed</Link>
