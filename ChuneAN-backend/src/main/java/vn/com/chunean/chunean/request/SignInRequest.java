@@ -5,6 +5,7 @@ import lombok.*;
 @Getter
 @Setter
 public class SignInRequest {
+
     public String getUsername() {
         return username;
     }

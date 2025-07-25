@@ -1,12 +1,15 @@
 package vn.com.chunean.chunean.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.entity.User;
 
 import vn.com.chunean.chunean.repositories.UserRepository;
 import lombok.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor
@@ -33,6 +36,9 @@ public class UserService {
             return null;
         }
         return user;
+    }
+    public Collection<? extends GrantedAuthority> getAuthorities(){
+        return Collections.emptyList();
     }
     public User createUser(User user){
         return  userRepository.save(user);
