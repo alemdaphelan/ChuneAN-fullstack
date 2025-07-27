@@ -21,7 +21,7 @@ public class User {
     private String id = UUID.randomUUID().toString();
     @Column(name = "UserName", nullable = false, unique = true, length = 50)
     private String username;
-    @Column(name = "Password", nullable = false)
+    @Column(name = "Password")
     private String password;
     @Column(name = "Email", nullable = false, unique = true, length = 50)
     private String email;

@@ -1,34 +1,30 @@
 import {useEffect,useState} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
+import axios from 'axios'
 export default function HomePage(){
     const navigate = useNavigate();
     const [_data,_setData] = useState<any[]>([]);
     useEffect(()=>{
-        const store = localStorage.getItem("user");
-        if(!store){
-            navigate('/');
-            return;
-        }
-        /*
-        const user = JSON.parse(store);
-        if(!user){
-            navigate('/');
-            return;
-        }
-        const getData = async() =>{
-            try{const res = await fetch('http://localhost:8080/api/users/');
-                const json = await res.json();
-                if(!Array.isArray(json) || !json.length){
-                    return
+        const getData = async () =>{
+            try {
+                const response = await axios.get('http://localhost:8080/api/users/me', {
+                    withCredentials: true
+                });
+                if(response.status === 200 || response.status === 201){
+                    _setData(response.data);
+                    navigate('/home');
                 }
-                setData(json);
+                else{
+                    navigate('/');
+                }
             }
             catch(err){
-                console.error("error: false to get data",err);
+                console.error(err);
+                navigate('/');
             }
         }
         getData();
-         */
+        return;
     },[]);
     return(
         <div className="text-white bg-black min-h-screen">

@@ -26,9 +26,9 @@ import java.time.Duration;
 @RequestMapping("/auth/google")
 @RequiredArgsConstructor
 public class GoogleController {
-    @Value("${GOOGLE_CLIENT_ID}")
+    @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
-    @Value("${GOOGLE_CLIENT_SECRET}")
+    @Value("${spring.security.oauth2.client.registration.google.client-secret}")
     private String clientSecret;
 
     private final String redirectUrl = "http://localhost:8080/auth/google/callback";
@@ -96,15 +96,16 @@ public class GoogleController {
             optUser = userService.createUser(newUser);
         }
 
-        //Set header for response
+        //Set JWT to header for response
         String jwt = jwtService.generateJwt(optUser.getId());
         ResponseCookie cookie = ResponseCookie.from("jwt",jwt)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .maxAge(Duration.ofHours(24))
-                .sameSite("None")
+                .sameSite("Lax")
                 .build();
         response.addHeader(HttpHeaders.SET_COOKIE,cookie.toString());
+        response.sendRedirect("http://localhost:5173/home");
     }
 }

@@ -30,14 +30,12 @@ export default function Login() {
             return;
         }
         try{
-            const res = await axios.post(`http://localhost:8080/api/users/login`,{
+            const res = await axios.post('http://localhost:8080/api/users/login',{
                 usernameOrEmail,
                 password
-            });
+            },{withCredentials: true});
 
             if(res.status === 200){
-                const data = res.data;
-                localStorage.setItem("user",data);
                 navigate("/home");
             }
         }
@@ -60,11 +58,12 @@ export default function Login() {
                 username,
                 email,
                 password,
-                birthday
-            });
+                birthday,
+            },{withCredentials: true});
             if(res.status === 200){
-                const data = res.data;
-                localStorage.setItem("user",data);
+                alert("nguoi dung da ton tai");
+            }
+            if(res.status === 201){
                 navigate("/home");
             }
         }
@@ -96,13 +95,13 @@ export default function Login() {
                 <div className="border-b-[2px] border-[#2A2A2A] w-[6.5rem]"></div>
             </div>
             <div className="flex justify-center gap-[1rem]">
-                <a href="/auth/google" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/google" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaGoogle />
                 </a>
-                <a href="/auth/facebook" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/facebook" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaFacebookF />
                 </a>
-                <a href="/auth/instagram" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/instagram" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaInstagram />
                 </a>
             </div>
@@ -129,13 +128,13 @@ export default function Login() {
                 <div className="border-b-[2px] border-[#2A2A2A] w-[6.5rem]"></div>
             </div>
             <div className="flex justify-center gap-[1rem]">
-                <a href="/auth/google" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/google" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaGoogle />
                 </a>
-                <a href="/auth/facebook" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/facebook" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaFacebookF />
                 </a>
-                <a href="/auth/instagram" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
+                <a href="http://localhost:8080/auth/instagram" className="p-[1rem] bg-[#1E1E1E] rounded-[5px] border-[2px] border-[#2A2A2A] hover:bg-[#4CFFA8] hover:text-black">
                     <FaInstagram />
                 </a>
             </div>

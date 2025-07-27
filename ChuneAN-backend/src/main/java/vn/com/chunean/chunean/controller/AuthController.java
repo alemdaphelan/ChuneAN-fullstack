@@ -4,6 +4,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.request.LoginRequest;
@@ -11,6 +13,8 @@ import vn.com.chunean.chunean.request.SignInRequest;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
+import java.net.Authenticator;
+import java.security.Principal;
 import java.time.Duration;
 
 @RequiredArgsConstructor
@@ -28,11 +32,11 @@ public class AuthController {
         String token = jwtService.generateJwt(id);
         return ResponseCookie.from("jwt",token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(false)
                 .path("/")
                 .domain("localhost")
                 .maxAge(Duration.ofHours(24))
-                .sameSite("None")
+                .sameSite("Lax")
                 .build();
     }
 
@@ -59,7 +63,7 @@ public class AuthController {
         String birthday = signInRequest.getBirthday();
         User existingUser = userService.getUserByEmailOrUsername(username,username);
         if(existingUser != null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+            return ResponseEntity.status(HttpStatus.OK)
                     .body("user is existed");
         }
         User user = userService.createUser(new User(username,password,email,birthday));
@@ -70,8 +74,14 @@ public class AuthController {
         }
         ResponseCookie cookie = buildCookie(user.getId());
 
-        return  ResponseEntity.status(HttpStatus.OK)
+        return  ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE,cookie.toString())
                 .body(user);
+    }
+    @GetMapping("/me")
+    public ResponseEntity<?> getMe () {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(user);
     }
 }
