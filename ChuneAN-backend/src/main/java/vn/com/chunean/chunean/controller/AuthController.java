@@ -13,8 +13,6 @@ import vn.com.chunean.chunean.request.SignInRequest;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
-import java.net.Authenticator;
-import java.security.Principal;
 import java.time.Duration;
 
 @RequiredArgsConstructor
