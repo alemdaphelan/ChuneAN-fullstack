@@ -4,9 +4,21 @@ import { FaPhoneAlt } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { FaStar } from "react-icons/fa";
+import axios from 'axios';
+import {useEffect} from "react";
+import {useNavigate} from "react-router-dom";
 
 function LandingPage(){
-    
+    const navigate = useNavigate();
+    useEffect(() => {
+        const checkCookies = async () =>{
+            const res = await axios.get('http://localhost:8080/api/users/me',{withCredentials: true});
+            if(res.status === 200){
+                navigate('/home')
+            }
+        }
+        checkCookies();
+    }, []);
     return(
         <div className=" text-white p-[1rem] pb-[3rem] bg-black">
             <header className="mb-[2rem] text-center flex flex-col gap-[1.5rem]">

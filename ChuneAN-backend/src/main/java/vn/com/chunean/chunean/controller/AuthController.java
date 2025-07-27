@@ -79,7 +79,10 @@ public class AuthController {
                 .body(user);
     }
     @GetMapping("/me")
-    public ResponseEntity<?> getMe () {
+    public ResponseEntity<?> getMe (@CookieValue(name="jwt",required = false) String jwt) {
+        if(jwt == null || !jwtService.validateJwt(jwt)){
+            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid jwt");
+        }
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = (User) authentication.getPrincipal();
         return ResponseEntity.ok(user);
