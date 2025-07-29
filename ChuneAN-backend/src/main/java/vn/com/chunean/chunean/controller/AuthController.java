@@ -1,89 +1,57 @@
 package vn.com.chunean.chunean.controller;
+
 import lombok.*;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.entity.User;
-
+import vn.com.chunean.chunean.exception.BadRequestException;
+import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.dto.request.LoginRequest;
-import vn.com.chunean.chunean.dto.request.SignInRequest;
-import vn.com.chunean.chunean.services.JwtService;
+import vn.com.chunean.chunean.request.SignInRequest;
 import vn.com.chunean.chunean.services.UserService;
 
-import java.time.Duration;
-
-@RequiredArgsConstructor
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @RestController
 @RequestMapping("/api/users")
-
 public class AuthController {
 
-    final UserService userService;
-    final JwtService jwtService;
+    @Autowired
+    private UserService userService;
 
-    private ResponseCookie buildCookie(String id){
-        String token = jwtService.generateJwt(id);
-        return ResponseCookie.from("jwt",token)
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .domain("localhost")
-                .maxAge(Duration.ofHours(24))
-                .sameSite("Lax")
-                .build();
-    }
-
-    @PostMapping("login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+    @PostMapping("/login")
+    public String login(@RequestBody LoginRequest loginRequest) {
         String usernameOrEmail = loginRequest.getUsernameOrEmail();
         String password = loginRequest.getPassword();
-        User user = userService.login(usernameOrEmail,password);
-        if(user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("incorrect username or password");
-        }
-        ResponseCookie cookie = buildCookie(user.getId());
 
-        return ResponseEntity.status(HttpStatus.OK)
-                .header(HttpHeaders.SET_COOKIE,cookie.toString())
-                .body(user);
+        User user = userService.login(usernameOrEmail, password);
+
+        if (user == null) {
+            throw new UnauthorizedException("Incorrect username or password");
+        }
+
+        return "Login success";
     }
 
-    @PostMapping("signin")
-    public ResponseEntity<?> signIn (@RequestBody SignInRequest signInRequest) {
+    @PostMapping("/signin")
+    public String signIn(@RequestBody SignInRequest signInRequest) {
         String username = signInRequest.getUsername();
         String password = signInRequest.getPassword();
         String email = signInRequest.getEmail();
         String birthday = signInRequest.getBirthday();
-        User existingUser = userService.getUserByEmailOrUsername(username,username);
-        if(existingUser != null){
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("user is existed");
-        }
-        User user = userService.createUser(new User(username,password,email,birthday));
 
-        if(user == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Cannot create user");
+        User existingUser = userService.getUserByEmailOrUsername(username, username);
+        if (existingUser != null) {
+            throw new UnauthorizedException("User already exists");
         }
-        ResponseCookie cookie = buildCookie(user.getId());
 
-        return  ResponseEntity.status(HttpStatus.CREATED)
-                .header(HttpHeaders.SET_COOKIE,cookie.toString())
-                .body(user);
-    }
-    @GetMapping("/me")
-    public ResponseEntity<?> getMe (@CookieValue(name="jwt",required = false) String jwt) {
-        if(jwt == null || !jwtService.validateJwt(jwt)){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid jwt");
+        User createdUser = userService.createUser(new User(username, password, email, birthday));
+        if (createdUser == null) {
+            throw new BadRequestException("Cannot create user");
         }
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        return ResponseEntity.ok(user);
+
+        return "Sign in success";
     }
 }
