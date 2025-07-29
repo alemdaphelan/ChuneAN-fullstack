@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Post {
     @Id
-    @Column(name = "PostID", length = 30)
+    @Column(name = "PostID", length = 36)
     private String id = UUID.randomUUID().toString();
     @Column(name = "Title", nullable = false)
     private String title;
@@ -27,6 +27,71 @@ public class Post {
     private Long commentCount;
     @Column(name = "Create_at")
     private LocalDate createAt;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public LocalDate getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDate createAt) {
+        this.createAt = createAt;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
+
+    public Integer getLikeCount() {
+        return likeCount;
+    }
+
+    public void setLikeCount(Integer likeCount) {
+        this.likeCount = likeCount;
+    }
+
+    public String getTrackUrl() {
+        return trackUrl;
+    }
+
+    public void setTrackUrl(String trackUrl) {
+        this.trackUrl = trackUrl;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     @ManyToOne
     @JoinColumn(name = "UserID", referencedColumnName = "UserID")
     private User user;

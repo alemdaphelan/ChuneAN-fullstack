@@ -8,8 +8,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.entity.User;
-import vn.com.chunean.chunean.request.LoginRequest;
-import vn.com.chunean.chunean.request.SignInRequest;
+
+import vn.com.chunean.chunean.dto.request.LoginRequest;
+import vn.com.chunean.chunean.dto.request.SignInRequest;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
