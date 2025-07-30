@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import vn.com.chunean.chunean.dto.request.PostRequest;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.dto.request.LoginRequest;
@@ -16,9 +15,7 @@ import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
 import java.time.Duration;
-@AllArgsConstructor
-@Getter
-@Setter
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/users")
 public class AuthController {
