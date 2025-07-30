@@ -9,7 +9,7 @@ import javax.crypto.SecretKey;
 import java.util.Date;
 @Service
 public class JwtService {
-    final String secret = "oiCaiDitMeCuocDoiToiYeuCuocDoiNayRatLaNhieuHaHaCaiDitConMeCayVaiLonDuMe";
+    final String secret = "oicaiditmecuocdoitoiyeucuocdoinayratlanhieuhahacaicondimecayvailondume";
     final SecretKey  secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     public String generateJwt(String userId){
         return Jwts.builder()

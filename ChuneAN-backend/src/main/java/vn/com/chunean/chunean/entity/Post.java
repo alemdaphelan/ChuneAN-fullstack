@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Post {
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @Column(name = "Title", nullable = false)
     private String title;
     @Column(name = "Content", columnDefinition = "TEXT")
@@ -34,6 +34,8 @@ public class Post {
         if (this.id == null) {
             this.id = UUID.randomUUID().toString();
         }
+        this.likeCount = this.likeCount == null ? 0 : this.likeCount;
+        this.commentCount = this.commentCount == null ? 0 : this.commentCount;
         this.createdAt = LocalDateTime.now();
     }
     @ManyToOne

@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 public class PostRequest {
+    private String userId;
     private String title;
     private String content;
     private String trackUrl;
     private Integer likeCount;
     private Long commentCount;
     private LocalDateTime createdAt;
-    private String userId;
 }

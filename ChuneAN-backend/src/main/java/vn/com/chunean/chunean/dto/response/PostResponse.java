@@ -1,5 +1,6 @@
 package vn.com.chunean.chunean.dto.response;
 
+
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PostResponse {
     private String id;
+    private String userId;
     private String title;
     private String content;
     private String trackUrl;
@@ -18,4 +20,5 @@ public class PostResponse {
     private Integer likeCount;
     private Long commentCount;
     private LocalDateTime createdAt;
+
 }

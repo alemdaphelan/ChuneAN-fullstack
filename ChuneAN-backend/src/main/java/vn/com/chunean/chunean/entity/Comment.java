@@ -17,13 +17,16 @@ import java.util.UUID;
 public class Comment {
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @Column(name = "Content", columnDefinition = "TEXT", nullable = false)
     private String content;
     @Column(name = "Created_at")
     private LocalDateTime createdAt;
     @PrePersist
     protected void onCreate() {
+        if(this.id == null){
+            this.id = UUID.randomUUID().toString();
+        }
         this.createdAt = LocalDateTime.now();
     }
     @ManyToOne

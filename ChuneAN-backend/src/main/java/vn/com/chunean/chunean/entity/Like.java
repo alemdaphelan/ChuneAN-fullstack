@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Like {
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @Column(name = "Created_at")
     private LocalDateTime createdAt;
     @PrePersist

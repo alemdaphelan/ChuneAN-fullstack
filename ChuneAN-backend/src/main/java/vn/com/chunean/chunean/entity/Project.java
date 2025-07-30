@@ -3,7 +3,6 @@ package vn.com.chunean.chunean.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -18,7 +17,7 @@ public class Project {
 
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OwnerID", referencedColumnName = "id", nullable = false)
     private User owner;

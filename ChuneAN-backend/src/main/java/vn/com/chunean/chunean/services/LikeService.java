@@ -1,7 +1,6 @@
 package vn.com.chunean.chunean.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.dto.request.LikeRequest;
 import vn.com.chunean.chunean.dto.response.LikeResponse;

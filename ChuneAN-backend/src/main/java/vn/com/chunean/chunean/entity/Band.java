@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Band {
     @Id
     @Column(name = "id",length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @Column(name = "BandName",nullable = false, unique = true,length = 200)
     private  String bandName;
     @Column(name = "Create_at",nullable = false)
@@ -25,6 +25,9 @@ public class Band {
     @PrePersist
     protected void onCreate()
     {
+        if(this.id==null){
+            this.id = UUID.randomUUID().toString();
+        }
         this.CreateAt = LocalDate.now();
     }
 

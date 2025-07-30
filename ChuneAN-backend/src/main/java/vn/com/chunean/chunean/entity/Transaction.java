@@ -16,7 +16,7 @@ import java.util.UUID;
 public class Transaction {
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ToUserId", referencedColumnName = "id", nullable = false)
     private User toUser;

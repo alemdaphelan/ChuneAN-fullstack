@@ -16,7 +16,7 @@ import lombok.*;
 public class User {
     @Id
     @Column(name = "id", length = 36)
-    private String id = UUID.randomUUID().toString();
+    private String id;
     @Column(name = "UserName", nullable = false, unique = true, length = 50)
     private String username;
     @Column(name = "Password")
