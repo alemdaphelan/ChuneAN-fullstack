@@ -1,11 +1,13 @@
 package vn.com.chunean.chunean.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentResponse {
@@ -13,5 +15,5 @@ public class CommentResponse {
     private String content;
     private String postId;
     private String username;
-    private LocalDate createAt;
+    private LocalDateTime createdAt;
 }

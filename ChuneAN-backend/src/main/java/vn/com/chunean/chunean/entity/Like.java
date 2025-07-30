@@ -1,28 +1,35 @@
 package vn.com.chunean.chunean.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 import java.util.UUID;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "Likes")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Like {
     @Id
-    @Column(name = "LikeID", length = 30)
+    @Column(name = "id", length = 36)
     private String id = UUID.randomUUID().toString();
     @Column(name = "Created_at")
-    private LocalDate createdAt;
-
+    private LocalDateTime createdAt;
+    @PrePersist
+    protected void onCreate() {
+        if (this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+        this.createdAt = LocalDateTime.now();
+    }
     @ManyToOne
-    @JoinColumn(name = "UserID", referencedColumnName = "UserID")
+    @JoinColumn(name = "UserId", referencedColumnName = "id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "PostID", referencedColumnName = "PostID", nullable = true)
+    @JoinColumn(name = "PostId", referencedColumnName = "id", nullable = true)
     private Post post;
 }

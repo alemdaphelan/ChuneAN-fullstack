@@ -1,26 +1,26 @@
 package vn.com.chunean.chunean.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "Followers")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Follower {
     @Id
-    @Column(name = "FollowerID",length = 36)
+    @Column(name = "id",length = 36)
     private String id = UUID.randomUUID().toString();
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID",referencedColumnName = "UserID",nullable = false)
+    @JoinColumn(name = "UserId",referencedColumnName = "id",nullable = false)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FollowerID",referencedColumnName = "FollowerID",nullable = false)
+    @JoinColumn(name = "FollowerId",referencedColumnName = "id",nullable = false)
     private User follower;
 
 }

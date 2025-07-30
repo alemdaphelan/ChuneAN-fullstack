@@ -1,13 +1,16 @@
 package vn.com.chunean.chunean.dto.request;
 
-import lombok.Data;
+import lombok.*;
+import java.time.LocalDateTime;
 
-import java.time.LocalDate;
-
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 public class CommentRequest {
     private String content;
-    private LocalDate createAt;
+    private LocalDateTime createdAt;
     private String userId;
     private String postId;
 }

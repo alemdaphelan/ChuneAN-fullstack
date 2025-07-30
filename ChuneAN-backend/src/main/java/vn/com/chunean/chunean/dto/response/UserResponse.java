@@ -1,10 +1,12 @@
 package vn.com.chunean.chunean.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserResponse {
@@ -13,4 +15,6 @@ public class UserResponse {
     private String email;
     private String birth;
     private String avatarUrl;
+    private String bio;
+    private LocalDateTime createdAt;
 }

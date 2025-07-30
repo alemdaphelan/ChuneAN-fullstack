@@ -1,10 +1,10 @@
 package vn.com.chunean.chunean.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -12,19 +12,24 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public class Comment {
     @Id
-    @Column(name = "CommentID", length = 30)
+    @Column(name = "id", length = 36)
     private String id = UUID.randomUUID().toString();
     @Column(name = "Content", columnDefinition = "TEXT", nullable = false)
     private String content;
     @Column(name = "Created_at")
-    private LocalDate createdAt;
-
+    private LocalDateTime createdAt;
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
     @ManyToOne
-    @JoinColumn(name = "UserID", referencedColumnName = "UserID")
+    @JoinColumn(name = "UserId", referencedColumnName = "id")
     private User user;
     @ManyToOne
-    @JoinColumn(name = "PostID", referencedColumnName = "PostID")
+    @JoinColumn(name = "PostId", referencedColumnName = "id")
     private Post post;
 }

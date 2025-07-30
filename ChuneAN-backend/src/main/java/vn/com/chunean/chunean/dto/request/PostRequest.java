@@ -2,7 +2,7 @@ package vn.com.chunean.chunean.dto.request;
 
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -15,6 +15,6 @@ public class PostRequest {
     private String trackUrl;
     private Integer likeCount;
     private Long commentCount;
-    private LocalDate createAt;
+    private LocalDateTime createdAt;
     private String userId;
 }

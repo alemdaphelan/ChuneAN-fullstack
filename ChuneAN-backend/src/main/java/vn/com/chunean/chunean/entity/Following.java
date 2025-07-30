@@ -7,16 +7,18 @@ import java.util.UUID;
 @Entity
 @Table(name = "Followings")
 @Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Following {
     @Id
-    @Column(name = "FollowingRecordID ",length = 36)
+    @Column(name = "id ",length = 36)
     private String id=UUID.randomUUID().toString();
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "UserID", referencedColumnName = "UserID", nullable = false)
+    @JoinColumn(name = "UserId", referencedColumnName = "id", nullable = false)
     private User user;
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FollowingID", referencedColumnName = "UserID", nullable = false)
+    @JoinColumn(name = "FollowingId", referencedColumnName = "id", nullable = false)
     private User following;
 }

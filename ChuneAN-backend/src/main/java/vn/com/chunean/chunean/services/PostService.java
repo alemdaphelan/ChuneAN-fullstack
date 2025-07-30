@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+
     public PostResponse createPost(PostRequest request) {
         Optional<User> userOptional = userRepository.findById(request.getUserId());
         if (userOptional.isEmpty()) {
@@ -29,7 +30,7 @@ public class PostService {
         post.setTitle(request.getTitle());
         post.setCommentCount(request.getCommentCount());
         post.setLikeCount(request.getLikeCount());
-        post.setCreateAt(request.getCreateAt());
+        post.setCreatedAt(request.getCreatedAt());
         post.setContent(request.getContent());
         post.setTrackUrl(request.getTrackUrl());
         post.setUser(userOptional.get());

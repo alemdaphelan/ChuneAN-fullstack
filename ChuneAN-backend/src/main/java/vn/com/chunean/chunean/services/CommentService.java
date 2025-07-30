@@ -1,7 +1,6 @@
 package vn.com.chunean.chunean.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.dto.request.CommentRequest;
 import vn.com.chunean.chunean.dto.response.CommentResponse;
@@ -32,7 +31,7 @@ public class CommentService {
         comment.setContent(request.getContent());
         comment.setUser(userOpt.get());
         comment.setPost(postOpt.get());
-        comment.setCreateAt(request.getCreateAt());
+        comment.setCreatedAt(request.getCreatedAt());
 
         Comment saved = commentRepository.save(comment);
 

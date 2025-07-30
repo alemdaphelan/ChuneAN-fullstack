@@ -1,16 +1,16 @@
 package vn.com.chunean.chunean.dto.request;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class LikeRequest {
     private String userId;
     private String postId;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }
