@@ -3,7 +3,6 @@ package vn.com.chunean.chunean.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -21,14 +20,14 @@ public class Band {
     @Column(name = "BandName",nullable = false, unique = true,length = 200)
     private  String bandName;
     @Column(name = "Create_at",nullable = false)
-    private LocalDate CreateAt;
+    private LocalDateTime CreateAt;
     @PrePersist
     protected void onCreate()
     {
         if(this.id==null){
             this.id = UUID.randomUUID().toString();
         }
-        this.CreateAt = LocalDate.now();
+        this.CreateAt = LocalDateTime.now();
     }
 
 }

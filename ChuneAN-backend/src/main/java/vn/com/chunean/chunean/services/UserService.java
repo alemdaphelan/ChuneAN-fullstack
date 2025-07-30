@@ -1,6 +1,5 @@
 package vn.com.chunean.chunean.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.entity.User;
 
@@ -9,14 +8,12 @@ import lombok.*;
 
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Getter
 @Setter
 @Service
 public class UserService {
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
     public List<User> getAllUser(){
         return userRepository.findAll();
     }
