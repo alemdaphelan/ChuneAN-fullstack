@@ -27,6 +27,7 @@ public class Transaction {
     private Double amountToken;
     @Column(name = "Created_at")
     private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         if (this.id == null) {

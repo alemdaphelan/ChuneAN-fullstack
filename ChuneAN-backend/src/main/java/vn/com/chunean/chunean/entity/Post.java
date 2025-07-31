@@ -29,6 +29,7 @@ public class Post {
     private Long commentCount;
     @Column(name = "Create_at")
     private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         if (this.id == null) {

@@ -31,6 +31,7 @@ public class User {
     private LocalDateTime createdAt;
     @Column(name = "Avatar_url", length = 255)
     private String avatarUrl;
+
     @PrePersist
     protected void onCreate() {
         if (this.id == null) {

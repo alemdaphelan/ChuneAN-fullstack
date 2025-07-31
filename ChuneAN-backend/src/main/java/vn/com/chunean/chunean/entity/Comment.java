@@ -21,6 +21,7 @@ public class Comment {
     private String content;
     @Column(name = "Created_at")
     private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         if(this.id == null){
@@ -28,6 +29,7 @@ public class Comment {
         }
         this.createdAt = LocalDateTime.now();
     }
+
     @ManyToOne
     @JoinColumn(name = "UserId", referencedColumnName = "id")
     private User user;

@@ -27,6 +27,7 @@ public class Project {
     private String description;
     @Column(name = "Created_at", nullable = false)
     private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         if (this.id == null) {

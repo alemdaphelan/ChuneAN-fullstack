@@ -19,6 +19,7 @@ public class Like {
     private String id;
     @Column(name = "Created_at")
     private LocalDateTime createdAt;
+
     @PrePersist
     protected void onCreate() {
         if (this.id == null) {
@@ -26,6 +27,7 @@ public class Like {
         }
         this.createdAt = LocalDateTime.now();
     }
+
     @ManyToOne
     @JoinColumn(name = "UserId", referencedColumnName = "id")
     private User user;

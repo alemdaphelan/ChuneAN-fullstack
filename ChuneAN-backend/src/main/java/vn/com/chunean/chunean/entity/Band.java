@@ -21,6 +21,7 @@ public class Band {
     private  String bandName;
     @Column(name = "Create_at",nullable = false)
     private LocalDateTime CreateAt;
+
     @PrePersist
     protected void onCreate()
     {
@@ -29,5 +30,4 @@ public class Band {
         }
         this.CreateAt = LocalDateTime.now();
     }
-
 }
