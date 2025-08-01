@@ -23,7 +23,7 @@ public class PostController {
 
     private String getUserId(String jwt){
         if(jwt == null || !jwtService.validateJwt(jwt) ){
-            return null;
+            throw new  UnauthorizedException("Invalid JWT");
         }
         User user =  (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return user.getId();
@@ -33,9 +33,6 @@ public class PostController {
     @GetMapping
     public ResponseEntity<?> getPosts(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
-        if(id == null){
-            throw new UnauthorizedException("Unauthorized");
-        }
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
@@ -44,9 +41,6 @@ public class PostController {
     @PostMapping
     public ResponseEntity<?> post(@CookieValue(name="jwt",required = false) String jwt ,@RequestBody PostRequest postRequest) {
         String userId = getUserId(jwt);
-        if(userId == null){
-            throw new UnauthorizedException("Unauthorized");
-        }
         PostResponse p = postService.createPost(postRequest);
         return ResponseEntity.status(HttpStatus.OK).body(p);
     }
@@ -55,9 +49,6 @@ public class PostController {
     @GetMapping("/following")
     public ResponseEntity<?> getPostFollowing(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
-        if(id == null){
-            throw new UnauthorizedException("Unauthorized");
-        }
         List<PostResponse> posts = postService.getAllPostsFromFollowing(id);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
@@ -66,9 +57,6 @@ public class PostController {
     @GetMapping("/Trending")
     public ResponseEntity<?> getTrendingPosts(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
-        if(id == null){
-            throw new UnauthorizedException("Unauthorized");
-        }
         List<PostResponse> posts = postService.getTrendingPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
@@ -77,9 +65,6 @@ public class PostController {
     @GetMapping("/newest")
     public ResponseEntity<?> getNewestPosts(@CookieValue(name="fwt", required = false ) String jwt) {
         String id= getUserId(jwt);
-        if(id == null){
-            throw new UnauthorizedException("Unauthorized");
-        }
         List<PostResponse> posts = postService.getNewestPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
