@@ -1,8 +1,10 @@
 import {useEffect,useState} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
+import {UserContext} from "./userContext.tsx";
 import axios from 'axios'
 
 interface User{
+    userId:string,
     username:string,
     email:string,
     tokenCount:number,
@@ -57,7 +59,9 @@ export default function HomePage(){
                     </div>
                 </div>
             </header>
-            <Outlet/>
+            <UserContext.Provider value={data}>
+                <Outlet/>
+            </UserContext.Provider>
         </div>
     )
 }

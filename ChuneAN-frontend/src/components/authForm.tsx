@@ -61,7 +61,7 @@ export default function Login() {
                 birthday,
             },{withCredentials: true});
             if(res.status === 200){
-                alert("nguoi dung da ton tai");
+                alert(res.data);
             }
             if(res.status === 201){
                 navigate("/home");

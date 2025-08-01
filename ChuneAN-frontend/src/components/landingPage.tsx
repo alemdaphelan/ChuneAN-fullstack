@@ -12,12 +12,12 @@ function LandingPage(){
     const navigate = useNavigate();
     useEffect(() => {
         const checkCookies = async () =>{
-            const res = await axios.get('http://localhost:8080/api/users/me',{withCredentials: true});
+            const res = await axios.get('http://localhost:8080/api/users/info',{withCredentials: true});
             if(res.status === 200){
                 navigate('/home')
             }
         }
-        checkCookies();
+        checkCookies().then();
     }, []);
     return(
         <div className=" text-white p-[1rem] pb-[3rem] bg-black">

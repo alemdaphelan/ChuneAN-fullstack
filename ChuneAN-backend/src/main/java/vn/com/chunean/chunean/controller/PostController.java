@@ -42,7 +42,7 @@ public class PostController {
     public ResponseEntity<?> post(@CookieValue(name="jwt",required = false) String jwt ,@RequestBody PostRequest postRequest) {
         String userId = getUserId(jwt);
         PostResponse p = postService.createPost(postRequest);
-        return ResponseEntity.status(HttpStatus.OK).body(p);
+        return ResponseEntity.status(HttpStatus.OK).body("created post successfully");
     }
 
     //Get following's posts
