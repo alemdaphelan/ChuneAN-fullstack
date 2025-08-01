@@ -1,3 +1,5 @@
+import {Link,Outlet} from 'react-router';
+import { LuNotebookPen } from "react-icons/lu";
 export default function Feed(){
     return (
         <main className="flex gap-4 p-4 justify-between">
@@ -16,6 +18,11 @@ export default function Feed(){
                         <p className="cursor-pointer hover:bg-[#292b33] p-2 px-[.5rem] rounded-[7px]">Follower</p>
                     </div>
                 </div>
+                <Link to="create" className="flex justify-center items-center bg-red-700 hover:bg-red-900 text-xl p-2 p-x-[1rem] rounded-[100vw] font-medium gap-2">
+                    <LuNotebookPen className="text-xl"/>
+                    <p>What's new?</p>
+                </Link>
+                <Outlet/>
             </div>
             <div className="">
                 this is feed

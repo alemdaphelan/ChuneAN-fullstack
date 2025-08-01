@@ -6,6 +6,7 @@ import vn.com.chunean.chunean.dto.request.PostRequest;
 import vn.com.chunean.chunean.dto.response.PostResponse;
 import vn.com.chunean.chunean.entity.Post;
 import vn.com.chunean.chunean.entity.User;
+import vn.com.chunean.chunean.exception.ResourceNotFoundException;
 import vn.com.chunean.chunean.repositories.PostRepository;
 import vn.com.chunean.chunean.repositories.UserRepository;
 
@@ -36,7 +37,7 @@ public class PostService {
     public PostResponse createPost(PostRequest request) {
         Optional<User> userOptional = userRepository.findById(request.getUserId());
         if (userOptional.isEmpty()) {
-            throw new RuntimeException("Not Found");
+            throw new ResourceNotFoundException("User not found");
         }
         Post post = new Post();
         post.setTitle(request.getTitle());

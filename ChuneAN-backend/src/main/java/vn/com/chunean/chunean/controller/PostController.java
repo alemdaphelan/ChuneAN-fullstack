@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.dto.request.PostRequest;
 import vn.com.chunean.chunean.dto.response.PostResponse;
 import vn.com.chunean.chunean.entity.User;
+import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.PostService;
 
@@ -33,7 +34,7 @@ public class PostController {
     public ResponseEntity<?> getPosts(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
         if(id == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
+            throw new UnauthorizedException("Unauthorized");
         }
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
@@ -44,7 +45,7 @@ public class PostController {
     public ResponseEntity<?> post(@CookieValue(name="jwt",required = false) String jwt ,@RequestBody PostRequest postRequest) {
         String userId = getUserId(jwt);
         if(userId == null){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
+            throw new UnauthorizedException("Unauthorized");
         }
         PostResponse p = postService.createPost(postRequest);
         return ResponseEntity.status(HttpStatus.OK).body(p);
@@ -55,7 +56,7 @@ public class PostController {
     public ResponseEntity<?> getPostFollowing(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
         if(id == null){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
+            throw new UnauthorizedException("Unauthorized");
         }
         List<PostResponse> posts = postService.getAllPostsFromFollowing(id);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
@@ -66,7 +67,7 @@ public class PostController {
     public ResponseEntity<?> getTrendingPosts(@CookieValue(name="fwt", required = false )String jwt) {
         String id= getUserId(jwt);
         if(id == null){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
+            throw new UnauthorizedException("Unauthorized");
         }
         List<PostResponse> posts = postService.getTrendingPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
@@ -77,7 +78,7 @@ public class PostController {
     public ResponseEntity<?> getNewestPosts(@CookieValue(name="fwt", required = false ) String jwt) {
         String id= getUserId(jwt);
         if(id == null){
-            return  ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
+            throw new UnauthorizedException("Unauthorized");
         }
         List<PostResponse> posts = postService.getNewestPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);

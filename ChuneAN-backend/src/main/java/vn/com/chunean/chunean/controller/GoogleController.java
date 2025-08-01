@@ -88,11 +88,13 @@ public class GoogleController {
         JsonNode userInfo = new ObjectMapper().readTree(userInfoResponse.getBody());
         String email = userInfo.get("email").asText();
         String username = userInfo.get("name").asText();
+        String avatarUrl = userInfo.get("picture").asText();
         User optUser = userService.getUserByEmailOrUsername(username,email);
         if(optUser == null) {
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setUsername(username);
+            newUser.setAvatarUrl(avatarUrl);
             optUser = userService.createUser(newUser);
         }
 

@@ -4,11 +4,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.entity.User;
-import vn.com.chunean.chunean.exception.UnauthorizedException;
+import vn.com.chunean.chunean.exception.BadRequestException;
+import vn.com.chunean.chunean.exception.ConflictException;
 import vn.com.chunean.chunean.dto.request.LoginRequest;
 import vn.com.chunean.chunean.dto.request.SignInRequest;
 import vn.com.chunean.chunean.services.JwtService;
@@ -39,10 +38,13 @@ public class AuthController {
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
         String usernameOrEmail = loginRequest.getUsernameOrEmail();
         String password = loginRequest.getPassword();
-        User user = userService.login(usernameOrEmail, password);
-        if (user == null) {
-            throw new UnauthorizedException("Incorrect username or password");
+        if(usernameOrEmail == null || usernameOrEmail.isBlank()) {
+            throw new BadRequestException("Username or email is required");
         }
+        if(password == null || password.isBlank()) {
+            throw new BadRequestException("Password is required");
+        }
+        User user = userService.login(usernameOrEmail, password);
         ResponseCookie cookie = buildCookie(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -57,10 +59,22 @@ public class AuthController {
         String email = signInRequest.getEmail();
         String birthday = signInRequest.getBirthday();
 
+        if(username == null || username.isBlank()){
+            throw new BadRequestException("username is required");
+        }
+        if(password == null || password.isBlank()){
+            throw new BadRequestException("password is required");
+        }
+        if(email == null || email.isBlank()){
+            throw new BadRequestException("email is required");
+        }
+        if(birthday == null || birthday.isBlank()){
+            throw new BadRequestException("birthday is required");
+        }
+
         User existingUser = userService.getUserByEmailOrUsername(username, username);
         if (existingUser != null) {
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body("user is existed");
+            throw new ConflictException("User already exists");
         }
 
         User user = new User();
@@ -71,8 +85,7 @@ public class AuthController {
         User createdUser = userService.createUser(user);
 
         if (createdUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Cannot create user");
+            throw new RuntimeException();
         }
         ResponseCookie cookie = buildCookie(user.getId());
 
