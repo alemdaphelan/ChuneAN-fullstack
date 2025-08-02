@@ -1,6 +1,6 @@
 import {Link,Outlet, useLocation} from 'react-router-dom';
 import { LuNotebookPen } from "react-icons/lu";
-import {useState,useEffect} from "react";
+import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa";
 
@@ -22,6 +22,7 @@ export default function Feed(){
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");
     const [isFollow,setIsFollow] = useState<boolean>(false);
     const [isLike,setIsLike] = useState<boolean>(false);
+    const audioRefs = useRef<HTMLAudioElement[]>([]);
     const location = useLocation();
 
     useEffect(() => {
@@ -92,9 +93,22 @@ export default function Feed(){
                             <p>{post.content}</p>
                         </div>
                         <div className="ml-[2rem]">
-                            {post.trackUrl == "" ? <p className="rounded-[100vw] bg-white text-black w-max px-[2rem] p-2 font-medium">There is no tracks avaible</p> : <audio controls src={"http://localhost:8080/" + post.trackUrl}/>}
+                            {post.trackUrl == "" ? <p className="rounded-[100vw] bg-white text-black w-max px-[2rem] p-3 font-medium">There is no track available</p>
+                                : <audio controls ref={(el)=>{
+                                        if(el) {
+                                            audioRefs.current[index] = el;
+                                        }
+                                }}
+                                         onPlay={()=>{
+                                             audioRefs.current.forEach((audio,i)=>{
+                                                 if(i!== index && audio && !audio.paused){
+                                                     audio.pause();
+                                                     audio.currentTime = 0;
+                                                 }
+                                             })
+                                         }} src={"http://localhost:8080/" + encodeURI(post.trackUrl)}/>}
                         </div>
-                        <div className="flex items-center gap-[2rem]">
+                        <div className="flex items-center gap-[2rem] text-xl">
                             <div className="flex items-center gap-2">
                                 <FaRegHeart/>
                                 <p>{post.likeCount}</p>

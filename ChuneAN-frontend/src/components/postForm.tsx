@@ -36,6 +36,7 @@ export default function PostForm(){
             const selectedFile = e.target.files[0];
             if(!selectedFile.type.startsWith("audio")){
                 alert("Only audio files are allowed");
+                navigate("..");
                 return;
             }
             setFile(selectedFile);
@@ -62,7 +63,7 @@ export default function PostForm(){
         navigate("..");
     }
     return (
-        <div ref={formRef} className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col gap-[2rem] bg-[#1E1E1E] p-[3rem] rounded-[2rem] border-[2px] border-[#2A2A2A]">
+        <div ref={formRef} className="fixed z-10 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col gap-[2rem] bg-[#1E1E1E] p-[3rem] rounded-[2rem] border-[2px] border-[#2A2A2A]">
             <div className="flex items-center gap-[2rem]">
                 <img src={user?.avatarUrl ? user.avatarUrl : "/default_avatar.jpg"} alt="user's avatar" className="w-[3rem] h-[3rem] rounded-full"/>
                 <div>
