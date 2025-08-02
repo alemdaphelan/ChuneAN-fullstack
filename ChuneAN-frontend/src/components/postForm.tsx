@@ -9,7 +9,6 @@ export default function PostForm(){
     const [file,setFile] = useState<File | null>(null);
     const navigate = useNavigate();
     const user = useUser();
-
     useEffect(() => {
         const handleClickOutside = (e: MouseEvent) =>{
             if(formRef.current && !formRef.current.contains(e.target as Node)){
@@ -60,7 +59,7 @@ export default function PostForm(){
             withCredentials:true
         });
         alert(res.data);
-        navigate("/feed");
+        navigate("..");
     }
     return (
         <div ref={formRef} className="fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] flex flex-col gap-[2rem] bg-[#1E1E1E] p-[3rem] rounded-[2rem] border-[2px] border-[#2A2A2A]">

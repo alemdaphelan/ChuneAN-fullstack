@@ -11,10 +11,8 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleOther(Exception e){
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Error, please try again");
+    public ResponseEntity<?> handleOther(Exception e){
+        return buildErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR,e.getMessage());
     }
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequest(BadRequestException ex) {
@@ -36,8 +34,8 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
-    private ResponseEntity<?> resourceNotFound(String message) {
-        return buildErrorResponse(HttpStatus.NOT_FOUND, message);
+    private ResponseEntity<?> resourceNotFound(ResourceNotFoundException ex) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, ex.getMessage());
     }
 
     @ExceptionHandler(ConflictException.class)

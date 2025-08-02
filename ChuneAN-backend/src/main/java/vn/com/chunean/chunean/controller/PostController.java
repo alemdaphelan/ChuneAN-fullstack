@@ -5,13 +5,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.com.chunean.chunean.dto.request.PostRequest;
 import vn.com.chunean.chunean.dto.response.PostResponse;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
+import vn.com.chunean.chunean.services.FileService;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.PostService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -20,6 +23,7 @@ import java.util.List;
 public class PostController {
     final private JwtService jwtService;
     final private PostService postService;
+    final private FileService fileService;
 
     private String getUserId(String jwt){
         if(jwt == null || !jwtService.validateJwt(jwt) ){
@@ -31,31 +35,37 @@ public class PostController {
 
     //Get all posts
     @GetMapping
-    public ResponseEntity<?> getPosts(@CookieValue(name="fwt", required = false )String jwt) {
+    public ResponseEntity<?> getPosts(@CookieValue(name="jwt", required = false )String jwt) {
         String id= getUserId(jwt);
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
-    //Create post
+    //Create post and store file
     @PostMapping
-    public ResponseEntity<?> post(@CookieValue(name="jwt",required = false) String jwt ,@RequestBody PostRequest postRequest) {
+    public ResponseEntity<?> post(@RequestParam(name="file", required = false)MultipartFile file, @CookieValue(name="jwt",required = false) String jwt , @ModelAttribute PostRequest postRequest) throws IOException {
         String userId = getUserId(jwt);
+        String fileUrl = "";
+        if(file != null) {
+            fileUrl = fileService.storeFile(file);
+        }
+        postRequest.setTrackUrl(fileUrl);
+        postRequest.setUserId(userId);
         PostResponse p = postService.createPost(postRequest);
-        return ResponseEntity.status(HttpStatus.OK).body("created post successfully");
+        return ResponseEntity.status(HttpStatus.OK).body("post was created successfully");
     }
 
     //Get following's posts
     @GetMapping("/following")
-    public ResponseEntity<?> getPostFollowing(@CookieValue(name="fwt", required = false )String jwt) {
+    public ResponseEntity<?> getPostFollowing(@CookieValue(name="jwt", required = false )String jwt) {
         String id= getUserId(jwt);
         List<PostResponse> posts = postService.getAllPostsFromFollowing(id);
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     //Get most liked posts
-    @GetMapping("/Trending")
-    public ResponseEntity<?> getTrendingPosts(@CookieValue(name="fwt", required = false )String jwt) {
+    @GetMapping("/trending")
+    public ResponseEntity<?> getTrendingPosts(@CookieValue(name="jwt", required = false )String jwt) {
         String id= getUserId(jwt);
         List<PostResponse> posts = postService.getTrendingPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
@@ -63,7 +73,7 @@ public class PostController {
 
     //Get newest posts
     @GetMapping("/newest")
-    public ResponseEntity<?> getNewestPosts(@CookieValue(name="fwt", required = false ) String jwt) {
+    public ResponseEntity<?> getNewestPosts(@CookieValue(name="jwt", required = false ) String jwt) {
         String id= getUserId(jwt);
         List<PostResponse> posts = postService.getNewestPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);

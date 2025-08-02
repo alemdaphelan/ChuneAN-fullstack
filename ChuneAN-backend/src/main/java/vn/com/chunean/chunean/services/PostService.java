@@ -25,12 +25,14 @@ public class PostService {
         PostResponse p = new PostResponse();
         p.setId(post.getId());
         p.setUserId(post.getUser().getId());
+        p.setAvatarUrl(post.getUser().getAvatarUrl());
         p.setTitle(post.getTitle());
         p.setContent(post.getContent());
         p.setTrackUrl(post.getTrackUrl());
         p.setUsername(post.getUser().getUsername());
         p.setLikeCount(post.getLikeCount());
         p.setCommentCount(post.getCommentCount());
+        p.setCreatedAt(post.getCreatedAt());
         return p;
     }
 
@@ -43,7 +45,6 @@ public class PostService {
         post.setTitle(request.getTitle());
         post.setCommentCount(request.getCommentCount());
         post.setLikeCount(request.getLikeCount());
-        post.setCreatedAt(request.getCreatedAt());
         post.setContent(request.getContent());
         post.setTrackUrl(request.getTrackUrl());
         post.setUser(userOptional.get());
@@ -53,7 +54,7 @@ public class PostService {
     }
 
     public List<PostResponse> getAllPosts() {
-        return postRepository.findAll().stream().map(this::mappingPostResponse
+        return postRepository.findAllWithUser().stream().map(this::mappingPostResponse
         ).collect(Collectors.toList());
     }
 
