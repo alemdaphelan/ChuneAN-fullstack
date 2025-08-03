@@ -30,7 +30,15 @@ export default function Feed(){
             const res = await axios.get(`http://localhost:8080/api/users/posts${additionalPath}`, {withCredentials:true});
             setData(res.data)
         }
+        const stopAudio = () =>{
+            audioRefs.current.forEach((audio) =>{
+                if(audio && !audio.paused){
+                    audio.pause();
+                }
+            })
+        }
         getData().then();
+        stopAudio();
     }, [additionalPath,location]);
 
     const handleFollow = async (followingId:string) =>{
@@ -48,11 +56,11 @@ export default function Feed(){
     const handleLike = async (postId:string) =>{
         setIsLike(!isLike);
         if(isLike){
-            const res = await axios.put(`http://localhost:8080/api/users/posts/like/${postId}`,{withCredentials:true});
+            const res = await axios.post(`http://localhost:8080/api/users/posts/like/${postId}`,{withCredentials:true});
             alert(res.data);
         }
         else if(!isLike){
-            const res = await axios.put(`http://localhost:8080/api/users/posts/unlike/${postId}`,{withCredentials:true});
+            const res = await axios.post(`http://localhost:8080/api/users/posts/unlike/${postId}`,{withCredentials:true});
             alert(res.data);
         }
     }
@@ -93,7 +101,8 @@ export default function Feed(){
                             <p>{post.content}</p>
                         </div>
                         <div className="ml-[2rem]">
-                            {post.trackUrl == "" ? <p className="rounded-[100vw] bg-white text-black w-max px-[2rem] p-3 font-medium">There is no track available</p>
+                            {post.trackUrl == ""
+                                ? <p className="rounded-[100vw] bg-white text-black w-max px-[2rem] p-3 font-medium">There is no track available</p>
                                 : <audio controls ref={(el)=>{
                                         if(el) {
                                             audioRefs.current[index] = el;

@@ -10,8 +10,8 @@ import vn.com.chunean.chunean.exception.BadRequestException;
 import vn.com.chunean.chunean.exception.ConflictException;
 import vn.com.chunean.chunean.dto.request.LoginRequest;
 import vn.com.chunean.chunean.dto.request.SignInRequest;
+import vn.com.chunean.chunean.services.AuthService;
 import vn.com.chunean.chunean.services.JwtService;
-import vn.com.chunean.chunean.services.UserService;
 
 import java.time.Duration;
 @RequiredArgsConstructor
@@ -19,7 +19,7 @@ import java.time.Duration;
 @RequestMapping("/api/users")
 public class AuthController {
 
-    final UserService userService;
+    final AuthService authService;
     final JwtService jwtService;
 
     private ResponseCookie buildCookie(String id) {
@@ -44,7 +44,7 @@ public class AuthController {
         if(password == null || password.isBlank()) {
             throw new BadRequestException("Password is required");
         }
-        User user = userService.login(usernameOrEmail, password);
+        User user = authService.login(usernameOrEmail, password);
         ResponseCookie cookie = buildCookie(user.getId());
 
         return ResponseEntity.status(HttpStatus.OK)
@@ -72,7 +72,7 @@ public class AuthController {
             throw new BadRequestException("birthday is required");
         }
 
-        User existingUser = userService.getUserByEmailOrUsername(username, username);
+        User existingUser = authService.getUserByEmailOrUsername(username, username);
         if (existingUser != null) {
             throw new ConflictException("User already exists");
         }
@@ -82,7 +82,7 @@ public class AuthController {
         user.setEmail(email);
         user.setPassword(password);
         user.setBirth(birthday);
-        User createdUser = userService.createUser(user);
+        User createdUser = authService.createUser(user);
 
         if (createdUser == null) {
             throw new RuntimeException();

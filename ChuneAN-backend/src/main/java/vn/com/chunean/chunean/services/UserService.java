@@ -1,42 +1,40 @@
 package vn.com.chunean.chunean.services;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import vn.com.chunean.chunean.dto.response.UserResponse;
+import vn.com.chunean.chunean.entity.Following;
 import vn.com.chunean.chunean.entity.User;
-
 import vn.com.chunean.chunean.exception.ResourceNotFoundException;
-import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.repositories.UserRepository;
-import lombok.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
-@Getter
-@Setter
 @Service
 public class UserService {
     private final UserRepository userRepository;
-    public List<User> getAllUser(){
-        return userRepository.findAll();
+    private final FollowingService followingService;
+
+    public UserResponse userResponseMapping (User user, List<Following> followingList, List<Following> followerList) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setId(user.getId());
+        userResponse.setUsername(user.getUsername());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setBio(user.getBio());
+        userResponse.setCreatedAt(user.getCreatedAt());
+        userResponse.setFollowingList(followingList);
+        return userResponse;
     }
-    public User getUserByEmailOrUsername(String username, String email){
-        return userRepository.findByUsernameOrEmail(username,email);
-    }
-    public User login(String usernameOrEmail, String password){
-        User user = this.getUserByEmailOrUsername(usernameOrEmail,usernameOrEmail);
-        if(user == null || !user.getPassword().equals(password)){
-            throw new UnauthorizedException("Invalid username or password");
-        }
-        return user;
-    }
-    public User getUserById(String id){
-        User user = userRepository.findById(id).orElse(null);
-        if(user == null){
+
+    public UserResponse getUserById(String id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
         }
-        return user;
-    }
-    public User createUser(User user){
-        return userRepository.save(user);
+        List<Following> followingList = followingService.getAllFollowing(user.get().getId());
+        List<Following> followerList = followingService.getAllFollower(user.get().getId());
+        return userResponseMapping(user.get(), followingList,followerList);
     }
 }

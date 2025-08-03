@@ -12,6 +12,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import vn.com.chunean.chunean.entity.User;
+import vn.com.chunean.chunean.services.AuthService;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 import java.io.IOException;
@@ -20,7 +21,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 @Component
 public class JwtFilter extends OncePerRequestFilter {
-    private final UserService userService;
+    private final AuthService authService;
     private final JwtService jwtService;
 
     @Override
@@ -46,7 +47,7 @@ public class JwtFilter extends OncePerRequestFilter {
         if(token != null && jwtService.validateJwt(token)){
             try{
                 String id =  jwtService.extractUserId(token);
-                User user = userService.getUserById(id);
+                User user = authService.getUserById(id);
                 if(user != null && SecurityContextHolder.getContext().getAuthentication() == null){
                     UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(user,token, Collections.emptyList());
                     SecurityContextHolder.getContext().setAuthentication(auth);

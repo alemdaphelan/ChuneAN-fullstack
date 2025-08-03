@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import vn.com.chunean.chunean.entity.User;
+import vn.com.chunean.chunean.services.AuthService;
 import vn.com.chunean.chunean.services.JwtService;
-import vn.com.chunean.chunean.services.UserService;
 
 import java.io.IOException;
 import java.net.URLEncoder;
@@ -26,6 +26,7 @@ import java.time.Duration;
 @RequestMapping("/auth/google")
 @RequiredArgsConstructor
 public class GoogleController {
+    private final AuthService authService;
     @Value("${spring.security.oauth2.client.registration.google.client-id}")
     private String clientId;
     @Value("${spring.security.oauth2.client.registration.google.client-secret}")
@@ -33,7 +34,6 @@ public class GoogleController {
 
     private final String redirectUrl = "http://localhost:8080/auth/google/callback";
 
-    private final UserService userService;
     private final JwtService jwtService;
 
     @GetMapping
@@ -89,13 +89,13 @@ public class GoogleController {
         String email = userInfo.get("email").asText();
         String username = userInfo.get("name").asText();
         String avatarUrl = userInfo.get("picture").asText();
-        User optUser = userService.getUserByEmailOrUsername(username,email);
+        User optUser = authService.getUserByEmailOrUsername(username,email);
         if(optUser == null) {
             User newUser = new User();
             newUser.setEmail(email);
             newUser.setUsername(username);
             newUser.setAvatarUrl(avatarUrl);
-            optUser = userService.createUser(newUser);
+            optUser = authService.createUser(newUser);
         }
 
         //Set JWT to header for response

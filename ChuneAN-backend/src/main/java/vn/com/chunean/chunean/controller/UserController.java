@@ -1,11 +1,13 @@
 package vn.com.chunean.chunean.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import vn.com.chunean.chunean.dto.response.UserResponse;
 import vn.com.chunean.chunean.entity.User;
+import vn.com.chunean.chunean.exception.UnauthorizedException;
+import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
 @RestController
@@ -13,25 +15,25 @@ import vn.com.chunean.chunean.services.UserService;
 @RequestMapping("/api/users")
 public class UserController {
     private final UserService userService;
+    private final JwtService jwtService;
+
+    public User getUserByJwt(String jwt) {
+        if(jwt == null || jwtService.validateJwt(jwt)){
+            throw new UnauthorizedException("Unauthorized");
+        }
+        return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 
     @GetMapping("/info")
     public ResponseEntity<?> getMe (@CookieValue(name="jwt",required = false) String jwt) {
-        if(jwt==null || jwt.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
-        }
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = getUserByJwt(jwt);
         return ResponseEntity.ok(user);
     }
+
     @GetMapping("info/{id}")
-    public ResponseEntity<?> getUser(@CookieValue(name="jwt",required = false) String jwt,@PathVariable("id") String id) {
-        if(jwt==null || jwt.isEmpty()){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User unauthenticated");
-        }
-        User user = userService.getUserById(id);
-        if (user != null) {
-            return ResponseEntity.ok(user);
-        }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("User not found");
+    public ResponseEntity<?> getUser(@CookieValue(name="jwt",required = false) String jwt, @PathVariable("id") String id) {
+        UserResponse user = userService.getUserById(id);
+        return ResponseEntity.ok(user);
     }
 
 }

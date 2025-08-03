@@ -14,7 +14,13 @@ import java.util.UUID;
 public class Following {
     @Id
     @Column(name = "id ",length = 36)
-    private String id=UUID.randomUUID().toString();
+    private String id;
+    @PrePersist
+    public void prePersist() {
+        if(this.id == null) {
+            this.id = UUID.randomUUID().toString();
+        }
+    }
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "UserId", referencedColumnName = "id", nullable = false)
     private User user;
