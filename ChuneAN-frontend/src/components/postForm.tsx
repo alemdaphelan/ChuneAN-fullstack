@@ -48,7 +48,7 @@ export default function PostForm(){
             return;
         }
         const formData = new FormData();
-        formData.append("userId",user?.userId ? user.userId : "");
+        formData.append("userId",user?.id ? user.id : "");
         formData.append("title",title);
         formData.append("content",content);
         formData.append("file",file as Blob);

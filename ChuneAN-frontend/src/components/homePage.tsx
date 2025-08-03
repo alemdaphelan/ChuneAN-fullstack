@@ -4,7 +4,7 @@ import {UserContext} from "./userContext.tsx";
 import axios from 'axios'
 
 interface User{
-    userId:string,
+    id:string,
     username:string,
     email:string,
     tokenCount:number,
@@ -38,6 +38,7 @@ export default function HomePage(){
         getData().then();
         return;
     },[]);
+    console.log(data);
     return(
         <div className="text-white bg-black min-h-screen">
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem] min-w-fullscreen">
@@ -55,7 +56,7 @@ export default function HomePage(){
                     </div>
                     <div className="flex items-center gap-2">
                         <p className="">{data?.username}</p>
-                        <img alt="user's avatar" src={data?.avatarUrl ? data.avatarUrl : "/default_avatar.jpg"} className="w-[2rem] h-[2rem] rounded-full" />
+                        <img loading="lazy" alt="user's avatar" src={data?.avatarUrl ? data.avatarUrl : "/default_avatar.jpg"} className="w-[2rem] h-[2rem] rounded-full" />
                     </div>
                 </div>
             </header>

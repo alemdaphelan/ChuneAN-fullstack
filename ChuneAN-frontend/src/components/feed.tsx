@@ -3,7 +3,7 @@ import { LuNotebookPen } from "react-icons/lu";
 import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa";
-
+import {useUser} from "./userContext.tsx";
 import axios from "axios";
 interface Post{
     id:string,
@@ -21,10 +21,9 @@ export default function Feed(){
     const[data,setData] = useState<Post[]>([]);
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");
     const [isFollow,setIsFollow] = useState<boolean>(false);
-    const [isLike,setIsLike] = useState<boolean>(false);
     const audioRefs = useRef<HTMLAudioElement[]>([]);
     const location = useLocation();
-
+    const user =useUser();
     useEffect(() => {
         const getData = async() =>{
             const res = await axios.get(`http://localhost:8080/api/users/posts${additionalPath}`, {withCredentials:true});
@@ -52,22 +51,9 @@ export default function Feed(){
             alert(res.data);
         }
     }
-
-    const handleLike = async (postId:string) =>{
-        setIsLike(!isLike);
-        if(isLike){
-            const res = await axios.post(`http://localhost:8080/api/users/posts/like/${postId}`,{withCredentials:true});
-            alert(res.data);
-        }
-        else if(!isLike){
-            const res = await axios.post(`http://localhost:8080/api/users/posts/unlike/${postId}`,{withCredentials:true});
-            alert(res.data);
-        }
-    }
-
     return (
         <main className="flex gap-4 p-4 justify-between">
-            <div className="flex flex-col gap-[2rem] bg-[#0a0b0d] p-[1rem] px-[2rem] min-w-[18rem] w-[20%] min-h-screen rounded-[7px]">
+            <div className="flex flex-col gap-[1rem] bg-[#0a0b0d] p-[1rem] px-[2rem] min-w-[18rem] w-[20%] min-h-screen rounded-[7px]">
                 <div className="flex flex-col gap-[1rem]">
                     <p onClick={()=>setAdditionalPath("/newest")} className="text-xl font-semibold cursor-pointer hover:bg-[#292b33] p-4 px-[1.5rem] rounded-[1rem]">Newest</p>
                 </div>
@@ -77,7 +63,7 @@ export default function Feed(){
                 <div className="flex flex-col gap-[1rem]">
                     <p onClick={()=>setAdditionalPath("/following")} className="text-xl font-semibold cursor-pointer hover:bg-[#292b33] p-4 px-[1.5rem] rounded-[1rem]">Following</p>
                 </div>
-                <Link to="create" className="flex justify-center items-center bg-red-700 hover:bg-red-900 text-xl p-4 p-x-[1rem] rounded-[100vw] font-medium gap-2">
+                <Link to="create" className="flex mt-[2rem] justify-center items-center bg-red-700 hover:bg-red-900 text-xl p-4 p-x-[1rem] rounded-[100vw] font-medium gap-2">
                     <LuNotebookPen className="text-xl"/>
                     <p>What's new?</p>
                 </Link>
@@ -92,8 +78,10 @@ export default function Feed(){
                                 <p className="text-xl font-medium">{post.username}</p>
                                 <p className="text-[#b9babd] text-[0.875rem]">{post.createdAt ? new Date(post.createdAt).toLocaleString() : "No date"}</p>
                             </div>
-                            {isFollow ? <button className="bg-white text-black p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] cursor-pointer ml-auto" onClick={()=>handleFollow(post.userId)}>follow</button>
-                                : <button className="ml-auto cursor-pointer p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] bg-red-700 text-white" onClick={()=>handleFollow(post.userId)}>unfollow</button>}
+                            {(post.userId != user?.id) ? (isFollow ? <button className="bg-white text-black p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] cursor-pointer ml-auto" onClick={()=>handleFollow(post.userId)}>follow</button>
+                                : <button className="ml-auto cursor-pointer p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] bg-red-700 text-white" onClick={()=>handleFollow(post.userId)}>unfollow</button>)
+                                :("")
+                            }
                         </div>
                         <div className="border-b-[2px] border-[#2A2A2A]"></div>
                         <div className="flex flex-col gap-2">

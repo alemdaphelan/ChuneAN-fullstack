@@ -1,6 +1,6 @@
 import {createContext,useContext} from "react";
 interface User{
-    userId:string,
+    id:string,
     username:string,
     email:string,
     tokenCount:number,
