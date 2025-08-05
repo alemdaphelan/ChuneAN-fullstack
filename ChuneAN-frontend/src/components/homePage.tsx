@@ -1,6 +1,6 @@
 import {useEffect,useState,useRef} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
-import {UserContext} from "./userContext.tsx";
+import {UserContext, SearchingContext} from "./userContext.tsx";
 import axios from 'axios'
 import type {User} from './Interfaces';
 
@@ -8,6 +8,7 @@ export default function HomePage(){
     const navigate = useNavigate();
     const [data,setData] = useState<User | null>(null);
     const [open,setOpen] = useState<boolean>(false);
+    const [search,setSearch] = useState<string>("");
     const menuRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{
         const getData = async () =>{
@@ -53,7 +54,7 @@ export default function HomePage(){
                 <Link className="text-[#b9babd] hover:text-white" to="library">Library</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="studio">Create Music</Link>
                 <div className="flex gap-2 relative">
-                    <input/>
+                    <input placeholder="Search username" onChange={(e)=>setSearch(e.target.value)}/>
                     <Link to="search" className="text-white rounded-[100vw] p-2 px-[1rem] font-medium">Search</Link>
                 </div>
                 <div className="flex text-[1rem] gap-[1rem] ml-auto select-none">
@@ -76,9 +77,11 @@ export default function HomePage(){
                     </div>
                 </div>
             </header>
-            <UserContext.Provider value={data}>
-                <Outlet/>
-            </UserContext.Provider>
+            <SearchingContext.Provider value={search}>
+                <UserContext.Provider value={data}>
+                    <Outlet/>
+                </UserContext.Provider>
+            </SearchingContext.Provider>
         </div>
     )
 }
