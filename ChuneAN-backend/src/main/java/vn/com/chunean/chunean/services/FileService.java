@@ -1,5 +1,6 @@
 package vn.com.chunean.chunean.services;
 
+import lombok.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +11,7 @@ import java.nio.file.Paths;
 import java.util.UUID;
 @Service
 public class FileService {
-    public String storeFile(MultipartFile file) throws IOException {
+    public String storeMusic(@NonNull MultipartFile file) throws IOException {
         String uploadDir = "uploads/music/";
         String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
         Path filePath = Paths.get(uploadDir + fileName);

@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.services.AuthService;
 import vn.com.chunean.chunean.services.JwtService;
-import vn.com.chunean.chunean.services.UserService;
 import java.io.IOException;
 import java.util.Collections;
 
@@ -25,7 +24,7 @@ public class JwtFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request,@NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
     throws  ServletException, IOException
     {
         String path = request.getRequestURI();

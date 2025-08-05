@@ -4,19 +4,8 @@ import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa";
 import {useUser} from "./userContext.tsx";
+import type {Post} from "./Interfaces.tsx";
 import axios from "axios";
-interface Post{
-    id:string,
-    avatarUrl:string,
-    username:string,
-    createdAt:string | null,
-    title:string,
-    content:string,
-    trackUrl:string,
-    likeCount:number,
-    commentCount:number,
-    userId:string
-}
 export default function Feed(){
     const[data,setData] = useState<Post[]>([]);
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");

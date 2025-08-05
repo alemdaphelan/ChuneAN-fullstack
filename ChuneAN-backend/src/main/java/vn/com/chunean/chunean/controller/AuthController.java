@@ -34,6 +34,17 @@ public class AuthController {
                 .build();
     }
 
+    private ResponseCookie killCookie() {
+        return ResponseCookie.from("jwt","")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .domain("localhost")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest) {
         String usernameOrEmail = loginRequest.getUsernameOrEmail();
@@ -92,5 +103,11 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(user);
+    }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout() {
+        ResponseCookie cookie = killCookie();
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(null);
     }
 }

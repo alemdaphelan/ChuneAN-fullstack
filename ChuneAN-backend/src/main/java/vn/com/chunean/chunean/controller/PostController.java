@@ -35,8 +35,7 @@ public class PostController {
 
     //Get all posts
     @GetMapping
-    public ResponseEntity<?> getPosts(@CookieValue(name="jwt", required = false )String jwt) {
-        String id= getUserId(jwt);
+    public ResponseEntity<?> getPosts() {
         List<PostResponse> posts = postService.getAllPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
@@ -47,11 +46,11 @@ public class PostController {
         String userId = getUserId(jwt);
         String fileUrl = "";
         if(file != null) {
-            fileUrl = fileService.storeFile(file);
+            fileUrl = fileService.storeMusic(file);
         }
         postRequest.setTrackUrl(fileUrl);
         postRequest.setUserId(userId);
-        PostResponse p = postService.createPost(postRequest);
+        postService.createPost(postRequest);
         return ResponseEntity.status(HttpStatus.OK).body("post was created successfully");
     }
 
@@ -65,18 +64,22 @@ public class PostController {
 
     //Get most liked posts
     @GetMapping("/trending")
-    public ResponseEntity<?> getTrendingPosts(@CookieValue(name="jwt", required = false )String jwt) {
-        String id= getUserId(jwt);
+    public ResponseEntity<?> getTrendingPosts() {
         List<PostResponse> posts = postService.getTrendingPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
     //Get newest posts
     @GetMapping("/newest")
-    public ResponseEntity<?> getNewestPosts(@CookieValue(name="jwt", required = false ) String jwt) {
-        String id= getUserId(jwt);
+    public ResponseEntity<?> getNewestPosts() {
         List<PostResponse> posts = postService.getNewestPosts();
         return ResponseEntity.status(HttpStatus.OK).body(posts);
     }
 
+    //Get user's post
+    @GetMapping("own/{id}")
+    public ResponseEntity<?> getUser(@PathVariable(name="id") String id) {
+        List<PostResponse> posts = postService.getPostsFromUserId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(posts);
+    }
 }

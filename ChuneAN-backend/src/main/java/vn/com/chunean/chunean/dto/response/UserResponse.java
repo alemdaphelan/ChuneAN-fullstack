@@ -19,5 +19,6 @@ public class UserResponse {
     private String avatarUrl;
     private String bio;
     private List<Following> followingList;
+    private List<Following> followerList;
     private LocalDateTime createdAt;
 }

@@ -36,7 +36,7 @@ public class PostService {
         return p;
     }
 
-    public PostResponse createPost(PostRequest request) {
+    public void createPost(PostRequest request) {
         Optional<User> userOptional = userRepository.findById(request.getUserId());
         if (userOptional.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
@@ -48,9 +48,7 @@ public class PostService {
         post.setContent(request.getContent());
         post.setTrackUrl(request.getTrackUrl());
         post.setUser(userOptional.get());
-        Post saved = postRepository.save(post);
-
-        return mappingPostResponse(saved);
+        postRepository.save(post);
     }
 
     public List<PostResponse> getAllPosts() {
@@ -72,5 +70,8 @@ public class PostService {
         List<Post> posts = postRepository.getNewestPost();
         return posts.stream().map(this::mappingPostResponse).toList();
     }
-
+    public List<PostResponse> getPostsFromUserId(String userId){
+        List<Post> posts = postRepository.getPostsByUserId(userId);
+        return posts.stream().map(this::mappingPostResponse).toList();
+    }
 }

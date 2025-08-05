@@ -6,6 +6,7 @@ import Studio from './components/studio';
 import {BrowserRouter,Routes,Route,Navigate} from 'react-router-dom'
 import HomePage from './components/homePage'
 import PostForm from "./components/postForm.tsx";
+import MyInfo from "./components/myInfo.tsx";
 function App() {
 
   return (
@@ -23,6 +24,9 @@ function App() {
               </Route>
               <Route path="library" element={<Library/>}></Route>
               <Route path="studio" element={<Studio/>}></Route>
+            </Route>
+            <Route path="/myInfo" element={<MyInfo/>}>
+              <Route path="edit"></Route>
             </Route>
           </Route>
         </Routes>

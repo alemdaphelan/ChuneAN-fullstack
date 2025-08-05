@@ -22,7 +22,7 @@ public class FollowingController {
     private final JwtService jwtService;
 
     public String getUserId(String jwt) {
-        if(jwt == null || jwtService.validateJwt(jwt)){
+        if(jwt == null || !jwtService.validateJwt(jwt)){
             throw new UnauthorizedException("Unauthorized");
         }
         User user = (User)  SecurityContextHolder.getContext().getAuthentication().getPrincipal();

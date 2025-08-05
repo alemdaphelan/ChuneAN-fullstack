@@ -1,22 +1,14 @@
-import {useEffect,useState} from 'react'
+import {useEffect,useState,useRef} from 'react'
 import {useNavigate, Link, Outlet} from 'react-router-dom'
 import {UserContext} from "./userContext.tsx";
 import axios from 'axios'
-
-interface User{
-    id:string,
-    username:string,
-    email:string,
-    tokenCount:number,
-    bio:string,
-    birthday:Date,
-    createdAt:Date,
-    avatarUrl:string
-}
+import type {User} from './Interfaces';
 
 export default function HomePage(){
     const navigate = useNavigate();
     const [data,setData] = useState<User | null>(null);
+    const [open,setOpen] = useState<boolean>(false);
+    const menuRef = useRef<HTMLDivElement>(null);
     useEffect(()=>{
         const getData = async () =>{
             try {
@@ -35,10 +27,21 @@ export default function HomePage(){
                 navigate('/');
             }
         }
+        const handleClickOutSide = (e:MouseEvent) =>{
+            if(menuRef.current && !(menuRef.current as HTMLElement).contains(e.target as Node)){
+                setOpen(false);
+            }
+        }
         getData().then();
-        return;
+        document.addEventListener("mousedown",handleClickOutSide);
+        return ()=>document.removeEventListener("mousedown",handleClickOutSide);
     },[]);
-    console.log(data);
+    const handleLogout = async () =>{
+        const res = await axios.get("http://localhost:8080/api/users/logout",{withCredentials:true});
+        if(res.status === 200){
+            navigate("/");
+        }
+    }
     return(
         <div className="text-white bg-black min-h-screen">
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem] min-w-fullscreen">
@@ -56,7 +59,16 @@ export default function HomePage(){
                     </div>
                     <div className="flex items-center gap-2">
                         <p className="">{data?.username}</p>
-                        <img loading="lazy" alt="user's avatar" src={data?.avatarUrl ? data.avatarUrl : "/default_avatar.jpg"} className="w-[2rem] h-[2rem] rounded-full" />
+                        <div ref={menuRef} className="relative">
+                            <img onClick={()=> setOpen(!open)} loading="lazy" alt="user's avatar" src={data?.avatarUrl ? data.avatarUrl : "/default_avatar.jpg"} className="cursor-pointer w-[2rem] h-[2rem] rounded-full" />
+                            {open ?
+                                <div className="absolute right-0 mt-2 flex flex-col bg-white text-black rounded-md overflow-hidden cursor-pointer min-w-max">
+                                    <a href="http://localhost:5173/myInfo" className="hover:bg-gray-400 p-2 px-[1rem] text-center">Profile</a>
+                                    <a onClick={handleLogout} className="hover:bg-gray-400 p-2 px-[1rem] text-center">Logout</a>
+                                </div>
+                                : ""
+                            }
+                        </div>
                     </div>
                 </div>
             </header>

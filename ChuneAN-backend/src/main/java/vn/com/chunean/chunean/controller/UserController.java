@@ -18,20 +18,21 @@ public class UserController {
     private final JwtService jwtService;
 
     public User getUserByJwt(String jwt) {
-        if(jwt == null || jwtService.validateJwt(jwt)){
+        if(jwt == null || !jwtService.validateJwt(jwt)){
             throw new UnauthorizedException("Unauthorized");
         }
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
     @GetMapping("/info")
-    public ResponseEntity<?> getMe (@CookieValue(name="jwt",required = false) String jwt) {
+    public ResponseEntity<?> getMe (@CookieValue(name="jwt") String jwt) {
         User user = getUserByJwt(jwt);
-        return ResponseEntity.ok(user);
+        UserResponse userResponse = userService.getUserById(user.getId());
+        return ResponseEntity.ok(userResponse);
     }
 
     @GetMapping("info/{id}")
-    public ResponseEntity<?> getUser(@CookieValue(name="jwt",required = false) String jwt, @PathVariable("id") String id) {
+    public ResponseEntity<?> getUser(@PathVariable("id") String id) {
         UserResponse user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }

@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post,String> {
             where p.user.id in
             (
                 select f.following.id from Following f
-                where f.user.id=:userId
+                where f.user.id = :userId
             )
             order by p.createdAt DESC
 """)
@@ -34,10 +34,19 @@ public interface PostRepository extends JpaRepository<Post,String> {
                 order by p.likeCount DESC
 """)
     List<Post> getTrendingPosts();
+
     @EntityGraph(attributePaths = {"user"})
     @Query("""
                 select p from Post p
                 order by p.createdAt desc
 """)
     List<Post> getNewestPost();
+
+    @EntityGraph(attributePaths = {"user"})
+    @Query("""
+                select p from Post p
+                where p.user.id = :userId
+                order by p.createdAt desc
+""")
+    List<Post> getPostsByUserId(String userId);
 }

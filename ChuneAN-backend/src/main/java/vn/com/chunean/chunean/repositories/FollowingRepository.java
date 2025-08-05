@@ -1,6 +1,7 @@
 package vn.com.chunean.chunean.repositories;
 
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,11 +19,13 @@ public interface FollowingRepository extends JpaRepository<Following,String> {
 """)
     void deleteFollowById(String userId,String followingId);
 
+    @EntityGraph(attributePaths = {"user", "following"})
     @Query("""
         select f from Following f where f.user.id = :userId
 """)
     List<Following> findFollowingByUserId(String userId);
 
+    @EntityGraph(attributePaths = {"user", "following"})
     @Query("""
         select f from Following f where f.following.id = :userId order by f.user.username
 """)

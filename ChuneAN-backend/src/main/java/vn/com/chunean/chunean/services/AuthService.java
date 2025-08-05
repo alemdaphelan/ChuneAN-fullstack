@@ -1,17 +1,16 @@
 package vn.com.chunean.chunean.services;
 
 import org.springframework.stereotype.Service;
-import vn.com.chunean.chunean.dto.response.UserResponse;
-import vn.com.chunean.chunean.entity.Following;
+
+
 import vn.com.chunean.chunean.entity.User;
 
 import vn.com.chunean.chunean.exception.ResourceNotFoundException;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
-import vn.com.chunean.chunean.repositories.FollowingRepository;
+
 import vn.com.chunean.chunean.repositories.UserRepository;
 import lombok.*;
 
-import java.util.List;
 
 @RequiredArgsConstructor
 @Getter
