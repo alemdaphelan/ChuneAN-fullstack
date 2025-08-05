@@ -10,6 +10,8 @@ import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -37,4 +39,9 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PostMapping("/find")
+    public ResponseEntity<?> findUser(@RequestBody String searchValue){
+        List<UserResponse> userResponseList = userService.findUserByUsername(searchValue);
+        return ResponseEntity.ok(userResponseList);
+    }
 }

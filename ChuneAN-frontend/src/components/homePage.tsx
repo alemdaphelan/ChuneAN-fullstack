@@ -52,6 +52,10 @@ export default function HomePage(){
                 <Link className="text-[#b9babd] hover:text-white" to="feed">Feed</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="library">Library</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="studio">Create Music</Link>
+                <div className="flex gap-2 relative">
+                    <input/>
+                    <Link to="search" className="text-white rounded-[100vw] p-2 px-[1rem] font-medium">Search</Link>
+                </div>
                 <div className="flex text-[1rem] gap-[1rem] ml-auto select-none">
                     <div className="flex gap-1 items-center">
                         <p>{data?.tokenCount ? data.tokenCount : 0}</p>

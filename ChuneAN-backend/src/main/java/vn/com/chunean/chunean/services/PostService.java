@@ -58,12 +58,12 @@ public class PostService {
 
     public List<PostResponse> getAllPostsFromFollowing(String userId) {
         List<Post> posts = postRepository.getAllPostsFromFollowing(userId);
-        return posts.stream().map(this::mappingPostResponse).toList();
+        return posts.stream().map(this::mappingPostResponse).collect(Collectors.toList());
     }
 
     public List<PostResponse> getTrendingPosts() {
         List<Post> posts = postRepository.getTrendingPosts();
-        return posts.stream().map(this::mappingPostResponse).toList();
+        return posts.stream().map(this::mappingPostResponse).collect(Collectors.toList());
     }
 
     public List<PostResponse> getNewestPosts(){

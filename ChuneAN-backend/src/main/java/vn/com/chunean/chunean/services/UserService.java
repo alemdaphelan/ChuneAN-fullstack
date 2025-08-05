@@ -9,6 +9,8 @@ import vn.com.chunean.chunean.exception.ResourceNotFoundException;
 import vn.com.chunean.chunean.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -35,4 +37,17 @@ public class UserService {
         List<Following> followerList = followingService.getAllFollower(user.getId());
         return userResponseMapping(user, followingList, followerList);
     }
+
+    public List<UserResponse> findUserByUsername(String username) {
+        List<User> userList = userRepository.seachUserByUsername(username);
+        if (userList.isEmpty()) {
+            throw new ResourceNotFoundException("User not found");
+        }
+        return userList.stream().map(user ->{
+            List<Following> followingList = followingService.getAllFollowing(user.getId());
+            List<Following> followerList = followingService.getAllFollower(user.getId());
+            return userResponseMapping(user, followingList, followerList);
+        }).collect(Collectors.toList());
+    }
+
 }
