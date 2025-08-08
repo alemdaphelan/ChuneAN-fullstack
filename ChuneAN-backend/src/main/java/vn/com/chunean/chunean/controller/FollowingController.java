@@ -37,7 +37,7 @@ public class FollowingController {
         return ResponseEntity.ok().body("Followed successfully");
     }
 
-    @PostMapping("/unfollow")
+    @DeleteMapping("/unfollow")
     public ResponseEntity<?> unfollow(@CookieValue(name="jwt") String jwt, @RequestBody FollowingRequest followingRequest){
         String userId = getUserId(jwt);
         followingRequest.setUserId(userId);

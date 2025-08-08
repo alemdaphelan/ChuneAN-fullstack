@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ChuneAN-backend/ChuneAN-backend.iml" filepath="$PROJECT_DIR$/ChuneAN-backend/ChuneAN-backend.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/ChuneAN-fullstack.iml" filepath="$PROJECT_DIR$/.idea/ChuneAN-fullstack.iml" />
     </modules>
   </component>

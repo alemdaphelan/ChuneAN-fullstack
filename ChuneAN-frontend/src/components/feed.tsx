@@ -56,7 +56,7 @@ export default function Feed(){
 
     const handleUnfollow = async (followingId:string) =>{
         try{
-            const res = await axios.post("http://localhost:8080/api/users/unfollow",{followingId: followingId},{withCredentials:true});
+            const res = await axios.delete("http://localhost:8080/api/users/unfollow",{data: { followingId },withCredentials:true});
             setFollowingList(prev=>prev.filter(user => user.userId !== followingId));
             alert(res.data);
         }
