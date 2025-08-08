@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import vn.com.chunean.chunean.dto.request.SearchRequest;
 import vn.com.chunean.chunean.dto.response.UserResponse;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
@@ -40,7 +41,8 @@ public class UserController {
     }
 
     @PostMapping("/find")
-    public ResponseEntity<?> findUser(@RequestBody String searchValue){
+    public ResponseEntity<?> findUser(@RequestBody SearchRequest searchRequest){
+        String searchValue = searchRequest.getSearch();
         List<UserResponse> userResponseList = userService.findUserByUsername(searchValue);
         return ResponseEntity.ok(userResponseList);
     }

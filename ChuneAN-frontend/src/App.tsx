@@ -25,7 +25,7 @@ function App() {
               </Route>
               <Route path="library" element={<Library/>}></Route>
               <Route path="studio" element={<Studio/>}></Route>
-              <Route path="findResult" element={<UserResult/>}></Route>
+              <Route path="search" element={<UserResult/>}></Route>
             </Route>
             <Route path="/myInfo" element={<MyInfo/>}>
               <Route path="edit"></Route>

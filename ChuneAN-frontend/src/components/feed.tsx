@@ -4,14 +4,15 @@ import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa";
 import {useUser} from "./userContext.tsx";
-import type {Post} from "./Interfaces.tsx";
+import type {Post, Following} from "./Interfaces.tsx";
 import axios from "axios";
 export default function Feed(){
     const[data,setData] = useState<Post[]>([]);
+    const [followingList,setFollowingList] = useState<Following[]>([]);
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");
-    const [isFollow,setIsFollow] = useState<boolean>(false);
     const audioRefs = useRef<HTMLAudioElement[]>([]);
     const location = useLocation();
+
     const user =useUser();
     useEffect(() => {
         const getData = async() =>{
@@ -29,17 +30,41 @@ export default function Feed(){
         stopAudio();
     }, [additionalPath,location]);
 
-    const handleFollow = async (followingId:string) =>{
-        setIsFollow(!isFollow);
-        if(isFollow){
-            const res = await axios.put(`http://localhost:8080/api/users/follow/${followingId}`,{withCredentials:true});
+    useEffect(()=>{
+        const getFollowing = async() =>{
+            try{
+                const res = await axios.get("http://localhost:8080/api/users/following",{withCredentials:true});
+                setFollowingList(res.data);
+            }
+            catch(e){
+                alert("Error!")
+            }
+        }
+        getFollowing().then();
+    },[])
+
+    const handleFollow = async (followingId:string, username:string, avatarUrl:string) =>{
+        try{
+            const res = await axios.post("http://localhost:8080/api/users/follow",{followingId:followingId},{withCredentials:true});
+            setFollowingList(prev => [...prev,{userId:followingId, username, avatarUrl}]);
             alert(res.data);
         }
-        if(!isFollow){
-            const res = await axios.put(`http://localhost:8080/api/users/unfollow/${followingId}`,{withCredentials:true});
-            alert(res.data);
+        catch (e){
+            alert("Error! Please try again later.");
         }
     }
+
+    const handleUnfollow = async (followingId:string) =>{
+        try{
+            const res = await axios.post("http://localhost:8080/api/users/unfollow",{followingId: followingId},{withCredentials:true});
+            setFollowingList(prev=>prev.filter(user => user.userId !== followingId));
+            alert(res.data);
+        }
+        catch (e){
+            alert("Error! Please try again later.");
+        }
+    }
+    console.log(followingList);
     return (
         <main className="flex gap-4 p-4 justify-between">
             <div className="flex flex-col gap-[1rem] bg-[#0a0b0d] p-[1rem] px-[2rem] min-w-[18rem] w-[20%] min-h-screen rounded-[7px]">
@@ -64,12 +89,11 @@ export default function Feed(){
                         <div className="flex items-center gap-[1rem]">
                             <img src={post?.avatarUrl ? post.avatarUrl : "/default_avatar.jpg"} className="rounded-full w-[3rem] h-[3rem]" alt="user's avatar"/>
                             <div className="flex flex-col gap-1">
-                                <p className="text-xl font-medium">{post.username}</p>
+                                <a href="http://localhost:5173/otherInfo" className="text-xl font-medium cursor-pointer hover:underline">{post.username}</a>
                                 <p className="text-[#b9babd] text-[0.875rem]">{post.createdAt ? new Date(post.createdAt).toLocaleString() : "No date"}</p>
                             </div>
-                            {(post.userId != user?.id) ? (isFollow ? <button className="bg-white text-black p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] cursor-pointer ml-auto" onClick={()=>handleFollow(post.userId)}>follow</button>
-                                : <button className="ml-auto cursor-pointer p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] bg-red-700 text-white" onClick={()=>handleFollow(post.userId)}>unfollow</button>)
-                                :("")
+                            {(post.userId != user?.id) && (!followingList.some(f=>f.userId === post.userId) ? <button className="bg-white text-black p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] cursor-pointer ml-auto" onClick={()=>handleFollow(post.userId,post.username,post.avatarUrl)}>follow</button>
+                                : <button className="ml-auto cursor-pointer p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] bg-red-700 text-white" onClick={()=>handleUnfollow(post.userId)}>unfollow</button>)
                             }
                         </div>
                         <div className="border-b-[2px] border-[#2A2A2A]"></div>

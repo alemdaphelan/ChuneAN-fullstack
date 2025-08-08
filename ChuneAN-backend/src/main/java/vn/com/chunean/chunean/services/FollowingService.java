@@ -3,6 +3,7 @@ package vn.com.chunean.chunean.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.dto.request.FollowingRequest;
+import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.entity.Following;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import vn.com.chunean.chunean.repositories.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -18,6 +20,13 @@ public class FollowingService {
     private final FollowingRepository followingRepository;
     private final UserRepository userRepository;
 
+    public FollowingResponse followingResponseMapping(Following following) {
+        FollowingResponse followingResponse = new FollowingResponse();
+        followingResponse.setUserId(following.getFollowing().getId());
+        followingResponse.setUsername(following.getFollowing().getUsername());
+        followingResponse.setAvatarUrl(following.getFollowing().getAvatarUrl());
+        return followingResponse;
+    }
     public void createFollowing(FollowingRequest followingRequest) {
 
         Optional<User> user = userRepository.findById(followingRequest.getUserId());
@@ -37,8 +46,8 @@ public class FollowingService {
     }
 
     public void deleteFollowing(FollowingRequest followingRequest) {
-        Optional<Following> following = followingRepository.findById(followingRequest.getFollowingId());
-        Optional<Following> user = followingRepository.findById(followingRequest.getUserId());
+        Optional<User> following = userRepository.findById(followingRequest.getFollowingId());
+        Optional<User> user = userRepository.findById(followingRequest.getUserId());
         if(following.isEmpty()){
             throw new ResourceNotFoundException("Following not found");
         }
@@ -48,11 +57,13 @@ public class FollowingService {
         followingRepository.deleteFollowById(followingRequest.getUserId(),followingRequest.getFollowingId());
     }
 
-    public List<Following> getAllFollowing(String userId){
-        return  followingRepository.findFollowingByUserId(userId);
+    public List<FollowingResponse> getAllFollowing(String userId){
+        List<Following> followingList = followingRepository.findFollowingByUserId(userId);
+        return  followingList.stream().map(this::followingResponseMapping).collect(Collectors.toList());
     }
 
-    public List<Following> getAllFollower(String userId){
-        return  followingRepository.findFollowerByUserId(userId);
+    public List<FollowingResponse> getAllFollower(String userId){
+        List<Following> followerList = followingRepository.findFollowerByUserId(userId);
+        return  followerList.stream().map(this::followingResponseMapping).collect(Collectors.toList());
     }
 }

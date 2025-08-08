@@ -53,9 +53,9 @@ export default function HomePage(){
                 <Link className="text-[#b9babd] hover:text-white" to="feed">Feed</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="library">Library</Link>
                 <Link className="text-[#b9babd] hover:text-white" to="studio">Create Music</Link>
-                <div className="flex gap-2 relative">
-                    <input placeholder="Search username" onChange={(e)=>setSearch(e.target.value)}/>
-                    <Link to="search" className="text-white rounded-[100vw] p-2 px-[1rem] font-medium">Search</Link>
+                <div className="relative w-[20rem] h-[3rem] rounded-[100vw] bg-[#1E1E1E] overflow-hidden border-2 border-[#2A2A2A]">
+                    <input placeholder="Search" className=" w-[70%] h-full focus:outline-0 px-4" onChange={(e)=>setSearch(e.target.value)}/>
+                    <Link to="search" className="text-black rounded-[100vw] p-2 px-[1rem] font-medium bg-white absolute h-full right-0">Search</Link>
                 </div>
                 <div className="flex text-[1rem] gap-[1rem] ml-auto select-none">
                     <div className="flex gap-1 items-center">

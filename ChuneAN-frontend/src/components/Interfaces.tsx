@@ -11,10 +11,10 @@ export interface User{
     followerList: Following[]
 }
 
-interface Following{
-    id:string,
+export interface Following{
     userId:string,
-    followingId:string
+    username:string,
+    avatarUrl:string
 }
 
 export interface Post{

@@ -2,14 +2,13 @@ package vn.com.chunean.chunean.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.dto.response.UserResponse;
-import vn.com.chunean.chunean.entity.Following;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.ResourceNotFoundException;
 import vn.com.chunean.chunean.repositories.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowingService followingService;
 
-    public UserResponse userResponseMapping (User user, List<Following> followingList, List<Following> followerList) {
+    public UserResponse userResponseMapping (User user, List<FollowingResponse> followingList, List<FollowingResponse> followerList) {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
@@ -33,8 +32,8 @@ public class UserService {
 
     public UserResponse getUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        List<Following> followingList = followingService.getAllFollowing(user.getId());
-        List<Following> followerList = followingService.getAllFollower(user.getId());
+        List<FollowingResponse> followingList = followingService.getAllFollowing(user.getId());
+        List<FollowingResponse> followerList = followingService.getAllFollower(user.getId());
         return userResponseMapping(user, followingList, followerList);
     }
 
@@ -44,8 +43,8 @@ public class UserService {
             throw new ResourceNotFoundException("User not found");
         }
         return userList.stream().map(user ->{
-            List<Following> followingList = followingService.getAllFollowing(user.getId());
-            List<Following> followerList = followingService.getAllFollower(user.getId());
+            List<FollowingResponse> followingList = followingService.getAllFollowing(user.getId());
+            List<FollowingResponse> followerList = followingService.getAllFollower(user.getId());
             return userResponseMapping(user, followingList, followerList);
         }).collect(Collectors.toList());
     }

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.dto.request.FollowingRequest;
-import vn.com.chunean.chunean.entity.Following;
+import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.services.FollowingService;
@@ -15,7 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("/api/users")
 
 public class FollowingController {
     private final FollowingService followingService;
@@ -37,13 +37,6 @@ public class FollowingController {
         return ResponseEntity.ok().body("Followed successfully");
     }
 
-    @GetMapping("/follow")
-    public ResponseEntity<?> getFollowing(@CookieValue(name="jwt") String jwt){
-        String userId = getUserId(jwt);
-        List<Following> followingList = followingService.getAllFollowing(userId);
-        return ResponseEntity.ok().body(followingList);
-    }
-
     @PostMapping("/unfollow")
     public ResponseEntity<?> unfollow(@CookieValue(name="jwt") String jwt, @RequestBody FollowingRequest followingRequest){
         String userId = getUserId(jwt);
@@ -52,4 +45,10 @@ public class FollowingController {
         return ResponseEntity.ok().body("Unfollowed successfully");
     }
 
+    @GetMapping("/following")
+    public ResponseEntity<?> getFollowing(@CookieValue(name="jwt") String jwt){
+        String userId = getUserId(jwt);
+        List<FollowingResponse>followingList = followingService.getAllFollowing(userId);
+        return  ResponseEntity.ok().body(followingList);
+    }
 }
