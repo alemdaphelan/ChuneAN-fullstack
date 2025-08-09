@@ -3,6 +3,7 @@ package vn.com.chunean.chunean.services;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.dto.request.FollowingRequest;
+import vn.com.chunean.chunean.dto.response.FollowerResponse;
 import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.entity.Following;
 import vn.com.chunean.chunean.entity.User;
@@ -26,6 +27,13 @@ public class FollowingService {
         followingResponse.setUsername(following.getFollowing().getUsername());
         followingResponse.setAvatarUrl(following.getFollowing().getAvatarUrl());
         return followingResponse;
+    }
+    public FollowerResponse followerResponseMapping(Following following) {
+        FollowerResponse followerResponse = new FollowerResponse();
+        followerResponse.setUserId(following.getUser().getId());
+        followerResponse.setUsername(following.getUser().getUsername());
+        followerResponse.setAvatarUrl(following.getUser().getAvatarUrl());
+        return followerResponse;
     }
     public void createFollowing(FollowingRequest followingRequest) {
 
@@ -62,8 +70,8 @@ public class FollowingService {
         return  followingList.stream().map(this::followingResponseMapping).collect(Collectors.toList());
     }
 
-    public List<FollowingResponse> getAllFollower(String userId){
+    public List<FollowerResponse> getAllFollower(String userId){
         List<Following> followerList = followingRepository.findFollowerByUserId(userId);
-        return  followerList.stream().map(this::followingResponseMapping).collect(Collectors.toList());
+        return  followerList.stream().map(this::followerResponseMapping).collect(Collectors.toList());
     }
 }

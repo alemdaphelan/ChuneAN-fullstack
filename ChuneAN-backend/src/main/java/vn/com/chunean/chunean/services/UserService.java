@@ -2,6 +2,7 @@ package vn.com.chunean.chunean.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import vn.com.chunean.chunean.dto.response.FollowerResponse;
 import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.dto.response.UserResponse;
 import vn.com.chunean.chunean.entity.User;
@@ -17,7 +18,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final FollowingService followingService;
 
-    public UserResponse userResponseMapping (User user, List<FollowingResponse> followingList, List<FollowingResponse> followerList) {
+    public UserResponse userResponseMapping (User user, List<FollowingResponse> followingList, List<FollowerResponse> followerList) {
         UserResponse userResponse = new UserResponse();
         userResponse.setId(user.getId());
         userResponse.setUsername(user.getUsername());
@@ -33,7 +34,7 @@ public class UserService {
     public UserResponse getUserById(String id) {
         User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
         List<FollowingResponse> followingList = followingService.getAllFollowing(user.getId());
-        List<FollowingResponse> followerList = followingService.getAllFollower(user.getId());
+        List<FollowerResponse> followerList = followingService.getAllFollower(user.getId());
         return userResponseMapping(user, followingList, followerList);
     }
 
@@ -44,7 +45,7 @@ public class UserService {
         }
         return userList.stream().map(user ->{
             List<FollowingResponse> followingList = followingService.getAllFollowing(user.getId());
-            List<FollowingResponse> followerList = followingService.getAllFollower(user.getId());
+            List<FollowerResponse> followerList = followingService.getAllFollower(user.getId());
             return userResponseMapping(user, followingList, followerList);
         }).collect(Collectors.toList());
     }

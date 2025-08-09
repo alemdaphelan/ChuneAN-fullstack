@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ChuneAN-backend (1)" />
       </profile>
       <profile name="Annotation profile for ChuneAN" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -19,6 +18,9 @@
         <module name="ChuneAN-backend" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="ChuneAN-backend (1)" target="1.5" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

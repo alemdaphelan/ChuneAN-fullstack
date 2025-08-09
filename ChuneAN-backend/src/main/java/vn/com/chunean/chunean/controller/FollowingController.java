@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import vn.com.chunean.chunean.dto.request.FollowingRequest;
+import vn.com.chunean.chunean.dto.response.FollowerResponse;
 import vn.com.chunean.chunean.dto.response.FollowingResponse;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.UnauthorizedException;
@@ -49,6 +50,13 @@ public class FollowingController {
     public ResponseEntity<?> getFollowing(@CookieValue(name="jwt") String jwt){
         String userId = getUserId(jwt);
         List<FollowingResponse>followingList = followingService.getAllFollowing(userId);
+        return  ResponseEntity.ok().body(followingList);
+    }
+
+    @GetMapping("/follower")
+    public ResponseEntity<?> getFollower(@CookieValue(name="jwt") String jwt){
+        String userId = getUserId(jwt);
+        List<FollowerResponse>followingList = followingService.getAllFollower(userId);
         return  ResponseEntity.ok().body(followingList);
     }
 }

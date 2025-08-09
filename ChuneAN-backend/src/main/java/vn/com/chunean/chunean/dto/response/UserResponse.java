@@ -1,8 +1,6 @@
 package vn.com.chunean.chunean.dto.response;
 
 import lombok.*;
-import vn.com.chunean.chunean.entity.Following;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -19,6 +17,6 @@ public class UserResponse {
     private String avatarUrl;
     private String bio;
     private List<FollowingResponse> followingList;
-    private List<FollowingResponse> followerList;
+    private List<FollowerResponse> followerList;
     private LocalDateTime createdAt;
 }
