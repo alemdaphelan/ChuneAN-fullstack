@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class JwtService {
     final String secret = "oicaiditmecuocdoitoiyeucuocdoinayratlanhieuhahacaicondimecayvailondume";
-    final SecretKey  secretKey = Keys.hmacShaKeyFor(secret.getBytes());
+    final SecretKey secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     public String generateJwt(String userId){
         return Jwts.builder()
                 .setSubject(userId)

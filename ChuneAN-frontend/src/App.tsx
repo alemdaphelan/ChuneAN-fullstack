@@ -8,6 +8,7 @@ import HomePage from './components/homePage'
 import PostForm from "./components/postForm.tsx";
 import MyInfo from "./components/myInfo.tsx";
 import UserResult from "./components/findUserResult.tsx";
+import OtherInfo from "./components/otherInfo.tsx";
 function App() {
 
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/myInfo" element={<MyInfo/>}>
               <Route path="edit"></Route>
             </Route>
+              <Route path="/otherInfo/:id" element = {<OtherInfo/>}></Route>
           </Route>
         </Routes>
       </BrowserRouter>

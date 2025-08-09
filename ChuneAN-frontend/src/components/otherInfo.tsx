@@ -1,49 +1,86 @@
 import {useState,useEffect,useRef} from 'react'
 import axios from "axios";
 import type {Following, User} from './Interfaces.tsx';
-import {useNavigate,Link,Outlet} from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import type {Post} from "./Interfaces.tsx";
 import {FaRegHeart} from "react-icons/fa6";
 import {FaCommentDots} from "react-icons/fa";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import MyInfo from "./myInfo.tsx";
 
-export default function MyInfo(){
-    const [user,setUser] = useState<User | null>(null);
-    const [post,setPost] = useState<Post[]>([]);
-    const [showFollowing, setShowFollowing] = useState(false);
-    const [showFollower, setShowFollower] = useState(false);
+export default function OtherInfo(){
+    const { id } = useParams();
+    const [user, setUser] = useState<User | null>(null);
+    const [post, setPost] = useState<Post[]>([]);
+    const [me, setMe] = useState<User | null>(null);
+    const [showFollowing, setShowFollowing] = useState<boolean>(false);
+    const [showFollower, setShowFollower] = useState<boolean>(false);
     const [followingList, setFollowingList] = useState<Following[]>([]);
     const audioRefs = useRef<HTMLAudioElement[]>([]);
     const navigate = useNavigate();
-    useEffect(()=>{
+    const [loading, setLoading] = useState<boolean>(true);
+    useEffect(() => {
+        const getMe = async() =>{
+            try{
+                const res = await axios.get("http://localhost:8080/api/users/info",{withCredentials:true});
+                setMe(res.data);
+            }
+            catch (e){
+                console.log(e);
+            }
+        }
+        getMe().then();
+        return;
+    }, []);
+
+    useEffect(() => {
+        setUser(null);
+        setPost([]);
         const getUser = async() =>{
-            try {
-                const res = await axios.get("http://localhost:8080/api/users/info", {withCredentials: true});
+            try{
+                const res = await axios.get(`http://localhost:8080/api/users/info/${id}`,{withCredentials:true});
                 setUser(res.data);
             }
-            catch{
-                alert("Can't get user's information");
-                navigate("/home");
+            catch (e){
+                console.log(e);
+            }
+            finally {
+                setLoading(false);
             }
         }
         getUser().then();
-    },[]);
+        return;
+    }, [id]);
 
     useEffect(() => {
-        if(!user) return;
+        setPost([]);
         const getPost = async() =>{
             try{
-                const resPost= await axios.get(`http://localhost:8080/api/users/posts/own/${user?.id}`,{withCredentials: true});
-                setPost(resPost.data);
+                const res = await axios.get(`http://localhost:8080/api/users/posts/own/${id}`,{withCredentials:true});
+                setPost(res.data);
             }
-            catch{
-                alert("Can't get user's posts");
-                navigate("/home");
+            catch(e){
+                console.log(e);
             }
         }
-        getPost().then();
-    }, [user]);
+        if(id) getPost().then();
+        return;
+    }, [id]);
+
+    useEffect(() => {
+        const getFollowing = async() =>{
+            try{
+                const res = await axios.get(`http://localhost:8080/api/users/following`,{withCredentials:true});
+                setFollowingList(res.data);
+            }
+            catch (e){
+                console.log(e);
+            }
+        }
+        if(me) getFollowing().then();
+        return;
+    }, [me]);
 
     useEffect(() => {
         const stopAudio = () =>{
@@ -56,39 +93,50 @@ export default function MyInfo(){
         stopAudio();
     }, []);
 
-    useEffect(()=>{
-        const getFollowingList = async() =>{
-            try{
-                const res = await axios.get("http://localhost:8080/api/users/following", {withCredentials: true});
-                setFollowingList(res.data);
-            }
-            catch(e){
-                alert("Can't get user's following");
-            }
+    const handleFollow = async (followingId: string,username:string,avatarUrl:string) => {
+        try {
+            await axios.post("http://localhost:8080/api/users/follow", {followingId: followingId}, {withCredentials: true});
+            setFollowingList(prev => [...prev, {userId: followingId, username: username, avatarUrl: avatarUrl}]);
         }
-        getFollowingList().then();
-    },[]);
-
-    const handleFollow = async (followingId:string, username:string, avatarUrl:string) =>{
-        const res = await axios.post(`http://localhost:8080/api/users/follow`,{followingId: followingId},{withCredentials: true});
-        setFollowingList(prev => [...prev,{userId:followingId,username:username,avatarUrl:avatarUrl}]);
-        alert(res.data);
+        catch (e){
+            console.log(e);
+        }
     }
-
-    const handleUnfollow = async (followingId:string) =>{
-        const res = await axios.delete(`http://localhost:8080/api/users/unfollow`,{data:{ followingId },withCredentials: true});
-        setFollowingList(followingList.filter(f => f.userId !== followingId));
-        alert(res.data);
+    const handleUnfollow = async (followingId: string) => {
+        try{
+            await axios.delete("http://localhost:8080/api/users/unfollow",{data:{followingId},withCredentials: true});
+            setFollowingList(followingList.filter(item => item.userId !== followingId));
+        }
+        catch (e){
+            console.log(e);
+        }
     }
-
+    if(loading){
+        return (
+        <div className="min-h-screen bg-black text-white flex items-center justify-center">
+            <p className="text-2xl">Loading...</p>
+        </div>
+        )
+    }
+    if(user?.id === me?.id) return (<MyInfo/>);
     return (
         <div className="grid grid-cols-3 bg-black min-h-screen text-white p-4 ">
             <div className="flex flex-col items-center gap-[1rem] relative bg-[#0a0b0d] p-4 rounded-[1rem]">
                 <img alt="user's avatar"
-                     src={user?.avatarUrl ? user.avatarUrl : "default_avatar.jpg"}
+                     src={user?.avatarUrl ? user.avatarUrl : "/default_avatar.jpg"}
                      className="rounded-full w-[7rem] h-[7rem] border-2 border-white"
                 />
-                <Link to="edit" className="absolute p-2 px-[2rem] rounded-[100vw] right-0 top-0 bg-white text-black hover:bg-gray-400">Edit</Link>
+                {(user) && (!followingList.some(f => f.userId === user?.id)
+                    ?<button
+                        onClick={()=>handleFollow(user.id, user.username,user.avatarUrl)}
+                        className="rounded-[100vw] p-2 px-6 bg-white cursor-pointer hover:bg-gray-500 text-black font-medium">
+                        Follow
+                    </button>
+                    :<button
+                        onClick={()=>handleUnfollow(user.id)}
+                        className="rounded-[100vw] p-2 px-6 bg-red-600 cursor-pointer hover:bg-red-800 text-white font-medium">
+                        Unfollow
+                    </button>)}
                 <p className="text-3xl font-bold">{user?.username}</p>
                 <div className="flex gap-[2rem] mx-auto text-[#b9babd]">
                     <p>{user?.followingList.length} following</p>
@@ -157,7 +205,7 @@ export default function MyInfo(){
                                 <div key={index} className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">
                                     <img className="w-[2rem] h-[2rem] rounded-full" src={following?.avatarUrl ? following.avatarUrl : "/default_avatar.jpg" } alt="following's avatar" />
                                     <p onClick={()=>navigate(`/otherInfo/${following.userId}`)} className="text-xl font-medium hover:underline cursor-pointer">{following.username}</p>
-                                    {!followingList.some(f=>f.userId === following.userId)
+                                    {(me && following.userId !== me.id) && (!followingList.some(f=>f.userId === following.userId)
                                         ?<button
                                             onClick={()=>handleFollow(following.userId,following.username,following.avatarUrl)}
                                             className="bg-white text-black font-medium p-2 px-4 rounded-[100vw] cursor-pointer hover:bg-gray-500 ml-auto">
@@ -167,10 +215,10 @@ export default function MyInfo(){
                                             onClick={()=>handleUnfollow(following.userId)}
                                             className="bg-red-500 text-white font-medium p-2 px-4 rounded-[100vw] cursor-pointer hover:bg-red-700 ml-auto">
                                             Unfollow
-                                        </button>}
+                                        </button>)}
                                 </div>
                             ))
-                        ) : (<div className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">You follow no one :(</div>))}
+                        ) : (<div className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">{user?.username} follow no one :(</div>))}
                     </div>
                 </div>
                 <div className="flex flex-col gap-[1rem] mt-[1rem]">
@@ -184,24 +232,23 @@ export default function MyInfo(){
                                 <div key={index} className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">
                                     <img className="w-[2rem] h-[2rem] rounded-full" src={follower?.avatarUrl ? follower.avatarUrl : "/default_avatar.jpg" } alt="following's avatar" />
                                     <p onClick={()=>navigate(`/otherInfo/${follower.userId}`)} className="text-xl font-medium cursor-pointer hover:underline">{follower.username}</p>
-                                    {!followingList.some(f=>f.userId === follower.userId)
-                                    ?<button
+                                    {(me && follower.userId !== me.id) && (!followingList.some(f=>f.userId === follower.userId)
+                                        ?<button
                                             onClick={()=>handleFollow(follower.userId,follower.username,follower.avatarUrl)}
                                             className="bg-white text-black font-medium p-2 px-4 rounded-[100vw] cursor-pointer hover:bg-gray-500 ml-auto">
                                             Follow
-                                    </button>
-                                    :<button
+                                        </button>
+                                        :<button
                                             onClick={()=>handleUnfollow(follower.userId)}
                                             className="bg-red-500 text-white font-medium p-2 px-4 rounded-[100vw] cursor-pointer hover:bg-red-700 ml-auto">
                                             Unfollow
-                                    </button>}
+                                        </button>)}
                                 </div>
                             ))
-                        ): <div className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">No one follow you :(</div>)}
+                        ): <div className="flex items-center gap-[1rem] w-full bg-[#1d1e23] p-3 px-5 rounded-[1rem]">No one follow {user?.username} :(</div>)}
                     </div>
                 </div>
             </div>
-            <Outlet/>
         </div>
     )
 }

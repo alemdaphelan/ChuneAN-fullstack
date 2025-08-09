@@ -1,4 +1,4 @@
-import {Link,Outlet, useLocation} from 'react-router-dom';
+import {Link,Outlet, useLocation,useNavigate} from 'react-router-dom';
 import { LuNotebookPen } from "react-icons/lu";
 import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
@@ -12,7 +12,7 @@ export default function Feed(){
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");
     const audioRefs = useRef<HTMLAudioElement[]>([]);
     const location = useLocation();
-
+    const navigate = useNavigate();
     const user =useUser();
     useEffect(() => {
         const getData = async() =>{
@@ -89,7 +89,7 @@ export default function Feed(){
                         <div className="flex items-center gap-[1rem]">
                             <img src={post?.avatarUrl ? post.avatarUrl : "/default_avatar.jpg"} className="rounded-full w-[3rem] h-[3rem]" alt="user's avatar"/>
                             <div className="flex flex-col gap-1">
-                                <a href="http://localhost:5173/otherInfo" className="text-xl font-medium cursor-pointer hover:underline">{post.username}</a>
+                                <p onClick={()=>navigate(`/otherInfo/${post.userId}`)} className="text-xl font-medium cursor-pointer hover:underline">{post.username}</p>
                                 <p className="text-[#b9babd] text-[0.875rem]">{post.createdAt ? new Date(post.createdAt).toLocaleString() : "No date"}</p>
                             </div>
                             {(post.userId != user?.id) && (!followingList.some(f=>f.userId === post.userId) ? <button className="bg-white text-black p-2 px-[2rem] rounded-[100vw] font-medium text-[0.875rem] cursor-pointer ml-auto" onClick={()=>handleFollow(post.userId,post.username,post.avatarUrl)}>follow</button>
