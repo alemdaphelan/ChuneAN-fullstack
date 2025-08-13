@@ -31,6 +31,31 @@ export default function MyInfo(){
     },[]);
 
     useEffect(() => {
+        let url : string;
+        const getUserAvatar = async () =>{
+            try{
+                const res = await axios.get("http://localhost:8080/api/users/avatar", {responseType:"blob",withCredentials: true});
+                url = URL.createObjectURL(res.data);
+                setUser((prev):User | null =>{
+                    if(!prev) return null;
+                    return ({...prev,avatarUrl:(url ? url : "/default_avatar.jpg")});
+                })
+            }catch (e){
+                console.error(e);
+                setUser(prev => {
+                    if(!prev) return null
+                    return ({...prev,avatarUrl:"/default_avatar.jpg"});
+                });
+            }
+        }
+        getUserAvatar().then();
+        return () =>{
+            if(!url) return;
+            URL.revokeObjectURL(url);
+        }
+    }, []);
+
+    useEffect(() => {
         if(!user) return;
         const getPost = async() =>{
             try{
@@ -68,6 +93,66 @@ export default function MyInfo(){
         }
         getFollowingList().then();
     },[]);
+
+    useEffect(() => {
+        if(!user?.followingList || user.followingList.length === 0) return;
+        let objectUrls : string[] = [];
+        const fetchAvatar = async () => {
+            const updateList = await Promise.all(
+                user.followingList.map(async (following) =>{
+                    try{
+                        const res = await axios.get(`http://localhost:8080/api/users/avatar/${following.userId}`,{responseType:"blob",withCredentials:true});
+                        const url = URL.createObjectURL(res.data);
+                        objectUrls.push(url);
+                        return {...following, avatarUrl:(url ? url : "/default_avatar")};
+                    }
+                    catch (e){
+                        return {...following, avatarUrl:"/default_avatar"};
+                    }
+                })
+            );
+            setUser((prev):User|null => {
+                if(!prev) return null;
+                return ({...prev,followingList:updateList})
+            });
+        }
+        fetchAvatar().then();
+        return () => {
+            objectUrls.forEach(url=>{
+                URL.revokeObjectURL(url);
+            })
+        }
+    }, []);
+
+    useEffect(() => {
+        if(!user?.followerList || user.followerList.length === 0) return;
+        let objectUrls : string[] = [];
+        const fetchAvatar = async () => {
+            const updateList = await Promise.all(
+                user.followerList.map(async (follower) =>{
+                    try{
+                        const res = await axios.get(`http://localhost:8080/api/users/avatar/${follower.userId}`,{responseType:"blob",withCredentials:true});
+                        const url = URL.createObjectURL(res.data);
+                        objectUrls.push(url);
+                        return {...follower, avatarUrl:(url? url: "/default_avatar.jpg")};
+                    }
+                    catch (e){
+                        return {...follower, avatarUrl:"/default_avatar"};
+                    }
+                })
+            );
+            setUser((prev):User|null => {
+                if(!prev) return null;
+                return ({...prev,followerList:updateList})
+            });
+        }
+        fetchAvatar().then();
+        return () => {
+            objectUrls.forEach(url=>{
+                URL.revokeObjectURL(url);
+            })
+        }
+    }, []);
 
     const handleFollow = async (followingId:string, username:string, avatarUrl:string) =>{
         const res = await axios.post(`http://localhost:8080/api/users/follow`,{followingId: followingId},{withCredentials: true});

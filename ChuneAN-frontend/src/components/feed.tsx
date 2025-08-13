@@ -43,6 +43,34 @@ export default function Feed(){
         getFollowing().then();
     },[])
 
+    useEffect(() => {
+        if(!data || data.length ==0) return;
+        let objectUrls: string[] = [];
+        const fetchAvatar = async () =>{
+            const updatedList = await Promise.all(
+                  data.map(async (item) =>{
+                      try{
+                          const res = await axios.get(`http://localhost:8080/api/users/avatar/${item.userId}`, {responseType:"blob",withCredentials:true});
+                          const url = URL.createObjectURL(res.data);
+                          objectUrls.push(url);
+                          return {...item,avatarUrl:(url ? url : "/default_avatar.jpg")};
+                      }
+                      catch(err){
+                          console.log(err);
+                          return {...item, avatarUrl: "/default_avatar.jpg"};
+                      }
+                  })
+            );
+            setData(updatedList);
+        }
+        fetchAvatar().then();
+        return () =>{
+            if(!objectUrls || objectUrls.length == 0) return;
+            objectUrls.forEach((item) =>{
+                URL.revokeObjectURL(item);
+            })
+        }
+    }, []);
     const handleFollow = async (followingId:string, username:string, avatarUrl:string) =>{
         try{
             const res = await axios.post("http://localhost:8080/api/users/follow",{followingId:followingId},{withCredentials:true});
@@ -64,7 +92,6 @@ export default function Feed(){
             alert("Error! Please try again later.");
         }
     }
-    console.log(followingList);
     return (
         <main className="flex gap-4 p-4 justify-between">
             <div className="flex flex-col gap-[1rem] bg-[#0a0b0d] p-[1rem] px-[2rem] min-w-[18rem] w-[20%] min-h-screen rounded-[7px]">

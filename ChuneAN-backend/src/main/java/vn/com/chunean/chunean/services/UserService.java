@@ -39,7 +39,7 @@ public class UserService {
     }
 
     public List<UserResponse> findUserByUsername(String username) {
-        List<User> userList = userRepository.seachUserByUsername(username);
+        List<User> userList = userRepository.searchUserByUsername(username);
         if (userList.isEmpty()) {
             throw new ResourceNotFoundException("User not found");
         }

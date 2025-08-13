@@ -1,9 +1,11 @@
 package vn.com.chunean.chunean.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import vn.com.chunean.chunean.dto.request.SearchRequest;
 import vn.com.chunean.chunean.dto.response.UserResponse;
 import vn.com.chunean.chunean.entity.User;
@@ -11,6 +13,7 @@ import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.UserService;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -45,5 +48,36 @@ public class UserController {
         String searchValue = searchRequest.getSearch();
         List<UserResponse> userResponseList = userService.findUserByUsername(searchValue);
         return ResponseEntity.ok(userResponseList);
+    }
+
+    @GetMapping("/avatar")
+    public ResponseEntity<byte[]> getMyAvatar(@CookieValue(name="jwt") String jwt) throws IOException {
+        User user = getUserByJwt(jwt);
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<byte[]> response = restTemplate.getForEntity(user.getAvatarUrl(), byte[].class);
+            if(response.getStatusCode().is2xxSuccessful()){
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(response.getBody());
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @GetMapping("/avatar/{id}")
+    public ResponseEntity<byte[]> getUserAvatar(@PathVariable("id") String id) throws IOException {
+        UserResponse user = userService.getUserById(id);
+        try{
+            RestTemplate restTemplate = new RestTemplate();
+            ResponseEntity<byte[]> response = restTemplate.getForEntity(user.getAvatarUrl(), byte[].class);
+            if(response.getStatusCode().is2xxSuccessful()){
+                return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(response.getBody());
+            }
+        }
+        catch (Exception e){
+            throw new RuntimeException(e);
+        }
+        return  ResponseEntity.notFound().build();
     }
 }

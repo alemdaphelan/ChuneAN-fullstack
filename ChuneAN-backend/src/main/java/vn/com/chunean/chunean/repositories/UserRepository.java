@@ -18,5 +18,5 @@ public interface UserRepository extends JpaRepository<User, String> {
             where u.username like concat('%',:username,'%')
             order by u.createdAt desc
 """)
-    List<User> seachUserByUsername(@Param("username") String username);
+    List<User> searchUserByUsername(@Param("username") String username);
 }

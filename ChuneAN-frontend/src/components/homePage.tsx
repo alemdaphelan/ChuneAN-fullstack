@@ -37,12 +37,37 @@ export default function HomePage(){
         document.addEventListener("mousedown",handleClickOutSide);
         return ()=>document.removeEventListener("mousedown",handleClickOutSide);
     },[]);
+
+    useEffect(() => {
+        let url:string | null = null;
+        const getAvatar = async() =>{
+            try{
+                const res = await axios.get('http://localhost:8080/api/users/avatar',{responseType:"blob",withCredentials: true});
+                url = URL.createObjectURL(res.data);
+                setData((prev):User | null => {
+                    if(!prev || !url) return null;
+                    return ({...prev,avatarUrl:(url ? url : "/default_avatar")});
+                });
+            }
+            catch (e){
+                console.error(e);
+                setData(prev => {
+                    if(!prev) return null
+                    return ({...prev,avatarUrl:"/default_avatar.jpg"});
+                });
+            }
+        }
+        getAvatar().then();
+        return () => {if(url != null) URL.revokeObjectURL(url)};
+    }, []);
+
     const handleLogout = async () =>{
         const res = await axios.get("http://localhost:8080/api/users/logout",{withCredentials:true});
         if(res.status === 200){
             navigate("/");
         }
     }
+    console.log(data?.avatarUrl);
     return(
         <div className="text-white bg-black min-h-screen">
             <header className="flex px-[1rem] pb-[.5rem] gap-[2rem] items-center pl-[7rem] min-w-fullscreen">
