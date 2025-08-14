@@ -60,7 +60,7 @@ public class UserController {
                 return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(response.getBody());
             }
         }catch (Exception e){
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
         return ResponseEntity.notFound().build();
     }
@@ -76,7 +76,7 @@ public class UserController {
             }
         }
         catch (Exception e){
-            throw new RuntimeException(e);
+            throw new IOException(e);
         }
         return  ResponseEntity.notFound().build();
     }

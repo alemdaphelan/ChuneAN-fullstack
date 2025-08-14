@@ -1,12 +1,15 @@
 package vn.com.chunean.chunean.services;
 
 import lombok.*;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import vn.com.chunean.chunean.dto.request.PostRequest;
 import vn.com.chunean.chunean.dto.response.PostResponse;
 import vn.com.chunean.chunean.entity.Post;
 import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.exception.ResourceNotFoundException;
+import vn.com.chunean.chunean.repositories.CommentRepository;
+import vn.com.chunean.chunean.repositories.LikeRepository;
 import vn.com.chunean.chunean.repositories.PostRepository;
 import vn.com.chunean.chunean.repositories.UserRepository;
 
@@ -20,9 +23,13 @@ import java.util.stream.Collectors;
 public class PostService {
     private final PostRepository postRepository;
     private final UserRepository userRepository;
+    private final LikeService likeService;
+    private final CommentService commentService;
 
     private PostResponse mappingPostResponse (Post post) {
         PostResponse p = new PostResponse();
+        long countLike = likeService.countByPost(post.getId());
+        long countComment = commentService.countByPost(post.getId());
         p.setId(post.getId());
         p.setUserId(post.getUser().getId());
         p.setAvatarUrl(post.getUser().getAvatarUrl());
@@ -30,8 +37,8 @@ public class PostService {
         p.setContent(post.getContent());
         p.setTrackUrl(post.getTrackUrl());
         p.setUsername(post.getUser().getUsername());
-        p.setLikeCount(post.getLikeCount());
-        p.setCommentCount(post.getCommentCount());
+        p.setLikeCount(countLike);
+        p.setCommentCount(countComment);
         p.setCreatedAt(post.getCreatedAt());
         return p;
     }

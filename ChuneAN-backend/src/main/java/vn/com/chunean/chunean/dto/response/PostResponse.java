@@ -16,8 +16,8 @@ public class PostResponse {
     private String trackUrl;
     private String username;
     private String avatarUrl;
-    private Integer likeCount;
-    private Long commentCount;
+    private long likeCount;
+    private long commentCount;
     private LocalDateTime createdAt;
 
 }

@@ -1,7 +1,6 @@
 package vn.com.chunean.chunean.dto.request;
 
 import lombok.*;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -10,7 +9,6 @@ import java.time.LocalDateTime;
 @Data
 public class CommentRequest {
     private String content;
-    private LocalDateTime createdAt;
     private String userId;
     private String postId;
 }

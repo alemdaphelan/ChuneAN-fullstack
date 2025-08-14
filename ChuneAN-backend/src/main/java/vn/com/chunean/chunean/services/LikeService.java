@@ -30,8 +30,6 @@ public class LikeService {
         Like like = new Like();
         like.setUser(userOpt.get());
         like.setPost(postOpt.get());
-        like.setCreatedAt(request.getCreatedAt());
-
         Like saved = likeRepository.save(like);
 
         LikeResponse response = new LikeResponse();
@@ -40,5 +38,20 @@ public class LikeService {
         response.setPostId(saved.getPost().getId());
 
         return response;
+    }
+    public void unlikePost(LikeRequest request)
+    {
+        Optional<User> userOpt =userRepository.findById(request.getUserId());
+        Optional<Post> postOpt =postRepository.findById(request.getPostId());
+        if(userOpt.isEmpty()||postOpt.isEmpty())
+        {
+            throw new RuntimeException("User or Post not found !");
+        }
+        likeRepository.deleteByUserAndPost(userOpt.get(),postOpt.get());
+    }
+    public long countByPost (String postId)
+    {
+        Post post=postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found "));
+        return likeRepository.countByPost(post);
     }
 }

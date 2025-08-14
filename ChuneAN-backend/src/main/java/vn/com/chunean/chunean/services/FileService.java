@@ -19,4 +19,12 @@ public class FileService {
         Files.write(filePath,file.getBytes());
         return "uploads/music/" + fileName;
     }
+    public String storeAvatar(@NonNull MultipartFile file) throws IOException {
+        String uploadDir = "uploads/avatars/";
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path filePath = Paths.get(uploadDir + fileName);
+        Files.createDirectories(filePath.getParent());
+        Files.write(filePath,file.getBytes());
+        return "uploads/avatars/" + fileName;
+    }
 }

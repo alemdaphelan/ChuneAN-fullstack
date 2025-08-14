@@ -2,8 +2,6 @@ package vn.com.chunean.chunean.dto.request;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,5 +10,4 @@ import java.time.LocalDateTime;
 public class LikeRequest {
     private String userId;
     private String postId;
-    private LocalDateTime createdAt;
 }
