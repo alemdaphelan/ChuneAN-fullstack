@@ -27,12 +27,12 @@ public class CommentController {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    @PostMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> createComment(@CookieValue(name="jwt") String jwt, @PathVariable(name="id") String postId, @RequestBody CommentRequest request)
+    @PostMapping("/comments")
+    public ResponseEntity<CommentResponse> createComment(@CookieValue(name="jwt") String jwt, @RequestBody CommentRequest request)
     {
         User user = getUserByJwt(jwt);
         request.setUserId(user.getId());
-        request.setPostId(postId);
+        request.setPostId(request.getPostId());
         CommentResponse response = commentService.createComment(request);
         return ResponseEntity.ok(response);
     }

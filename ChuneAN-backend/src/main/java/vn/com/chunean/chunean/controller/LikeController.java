@@ -25,8 +25,9 @@ public class LikeController {
         return (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    @PostMapping("/like/{id}")
-    public ResponseEntity<LikeResponse> likePost(@CookieValue(name="jwt") String jwt,@PathVariable(name = "id") String postId, @RequestBody LikeRequest request) {
+    @GetMapping("/like/{id}")
+    public ResponseEntity<LikeResponse> likePost(@CookieValue(name="jwt") String jwt,@PathVariable(name = "id") String postId) {
+        LikeRequest request= new LikeRequest();
         User user = getUserByJwt(jwt);
         request.setUserId(user.getId());
         request.setPostId(postId);
@@ -35,7 +36,8 @@ public class LikeController {
     }
 
     @DeleteMapping("/unlike/{id}")
-    public ResponseEntity<String> unlikePost(@CookieValue(name="jwt") String jwt,@PathVariable(name="id") String postId,@RequestBody LikeRequest request) {
+    public ResponseEntity<String> unlikePost(@CookieValue(name="jwt") String jwt,@PathVariable(name="id") String postId) {
+        LikeRequest request = new LikeRequest();
         User user =  getUserByJwt(jwt);
         request.setUserId(user.getId());
         request.setPostId(postId);
