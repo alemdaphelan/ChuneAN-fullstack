@@ -7,10 +7,12 @@ import vn.com.chunean.chunean.entity.Like;
 import vn.com.chunean.chunean.entity.Post;
 import vn.com.chunean.chunean.entity.User;
 
+import java.util.List;
+
 @Repository
 public interface LikeRepository extends JpaRepository<Like,String> {
     @Transactional
     void deleteByUserAndPost(User user, Post post);
     long countByPost(Post post);
-
+    List<Like> getLikeByUser(User user);
 }

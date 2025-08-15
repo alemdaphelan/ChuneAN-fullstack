@@ -11,6 +11,8 @@ import vn.com.chunean.chunean.exception.UnauthorizedException;
 import vn.com.chunean.chunean.services.JwtService;
 import vn.com.chunean.chunean.services.LikeService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users/posts")
 @RequiredArgsConstructor
@@ -26,19 +28,19 @@ public class LikeController {
     }
 
     @GetMapping("/like/{id}")
-    public ResponseEntity<LikeResponse> likePost(@CookieValue(name="jwt") String jwt,@PathVariable(name = "id") String postId) {
-        LikeRequest request= new LikeRequest();
+    public ResponseEntity<String> likePost(@CookieValue(name="jwt") String jwt,@PathVariable(name = "id") String postId) {
         User user = getUserByJwt(jwt);
+        LikeRequest request = new LikeRequest();
         request.setUserId(user.getId());
         request.setPostId(postId);
-        LikeResponse response = likeService.likePost(request);
-        return ResponseEntity.ok(response);
+        likeService.likePost(request);
+        return ResponseEntity.ok("like success");
     }
 
     @DeleteMapping("/unlike/{id}")
     public ResponseEntity<String> unlikePost(@CookieValue(name="jwt") String jwt,@PathVariable(name="id") String postId) {
-        LikeRequest request = new LikeRequest();
         User user =  getUserByJwt(jwt);
+        LikeRequest request = new LikeRequest();
         request.setUserId(user.getId());
         request.setPostId(postId);
         likeService.unlikePost(request);
@@ -49,6 +51,13 @@ public class LikeController {
     public ResponseEntity<Long> countLikes(@PathVariable (name="id") String postId) {
         long  count = likeService.countByPost(postId);
         return ResponseEntity.ok(count);
+    }
+
+    @GetMapping("/likes")
+    public ResponseEntity<List<LikeResponse>> listLikes(@CookieValue(name="jwt") String jwt) {
+        User user = getUserByJwt(jwt);
+        List<LikeResponse> likeList = likeService.getLikesByUser(user.getId());
+        return ResponseEntity.ok(likeList);
     }
 }
 

@@ -10,6 +10,8 @@ import vn.com.chunean.chunean.entity.User;
 import vn.com.chunean.chunean.repositories.LikeRepository;
 import vn.com.chunean.chunean.repositories.PostRepository;
 import vn.com.chunean.chunean.repositories.UserRepository;
+
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -19,7 +21,14 @@ public class LikeService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    public LikeResponse likePost(LikeRequest request) {
+    public LikeResponse likeResponseMapping(Like like) {
+        LikeResponse likeResponse = new LikeResponse();
+        likeResponse.setPostId(like.getPost().getId());
+        likeResponse.setUsername(like.getUser().getUsername());
+        likeResponse.setCreatedAt(like.getCreatedAt());
+        return  likeResponse;
+    }
+    public void likePost(LikeRequest request) {
         Optional<User> userOpt = userRepository.findById(request.getUserId());
         Optional<Post> postOpt = postRepository.findById(request.getPostId());
 
@@ -30,14 +39,9 @@ public class LikeService {
         Like like = new Like();
         like.setUser(userOpt.get());
         like.setPost(postOpt.get());
-        Like saved = likeRepository.save(like);
+        likeRepository.save(like);
 
-        LikeResponse response = new LikeResponse();
-        response.setId(saved.getId());
-        response.setUsername(saved.getUser().getUsername());
-        response.setPostId(saved.getPost().getId());
-
-        return response;
+        postRepository.updatePostLike(postOpt.get().getId());
     }
     public void unlikePost(LikeRequest request)
     {
@@ -47,11 +51,18 @@ public class LikeService {
         {
             throw new RuntimeException("User or Post not found !");
         }
+        postRepository.updatePostUnLike(postOpt.get().getId());
         likeRepository.deleteByUserAndPost(userOpt.get(),postOpt.get());
     }
     public long countByPost (String postId)
     {
         Post post=postRepository.findById(postId).orElseThrow(() -> new RuntimeException("Post not found "));
         return likeRepository.countByPost(post);
+    }
+    public List<LikeResponse> getLikesByUser (String userId)
+    {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Like> likeList = likeRepository.getLikeByUser(user);
+        return likeList.stream().map(this::likeResponseMapping).toList();
     }
 }

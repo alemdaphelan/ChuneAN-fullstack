@@ -29,3 +29,8 @@ export interface Post{
     commentCount:number,
     userId:string
 }
+
+export interface Like{
+    userId:string,
+    postId:string
+}

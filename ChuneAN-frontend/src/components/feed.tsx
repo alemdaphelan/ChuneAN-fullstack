@@ -4,11 +4,13 @@ import {useState,useEffect,useRef} from "react";
 import { FaRegHeart } from "react-icons/fa6";
 import { FaCommentDots } from "react-icons/fa";
 import {useUser} from "./userContext.tsx";
-import type {Post, Following} from "./Interfaces.tsx";
+import { FaHeart } from "react-icons/fa";
+import type {Post, Following,Like} from "./Interfaces.tsx";
 import axios from "axios";
 export default function Feed(){
     const[data,setData] = useState<Post[]>([]);
     const [followingList,setFollowingList] = useState<Following[]>([]);
+    const [likedList, setLikedList] = useState<Like[]>([]);
     const [additionalPath,setAdditionalPath] = useState<string>("/newest");
     const audioRefs = useRef<HTMLAudioElement[]>([]);
     const location = useLocation();
@@ -71,6 +73,20 @@ export default function Feed(){
             })
         }
     }, []);
+
+    useEffect(() => {
+        const getLikedList = async () =>{
+            try{
+                const res = await axios.get("http://localhost:8080/api/users/posts/likes",{withCredentials:true});
+                setLikedList(res.data);
+            }
+            catch (e){
+                alert("Error!")
+            }
+        }
+        getLikedList().then();
+    }, []);
+
     const handleFollow = async (followingId:string, username:string, avatarUrl:string) =>{
         try{
             const res = await axios.post("http://localhost:8080/api/users/follow",{followingId:followingId},{withCredentials:true});
@@ -89,6 +105,50 @@ export default function Feed(){
             alert(res.data);
         }
         catch (e){
+            alert("Error! Please try again later.");
+        }
+    }
+
+    const handleLike = async(userId:string | undefined, postId:string) =>{
+        if(!userId) {
+            alert("Please login to continue");
+            return;
+        }
+        setData(prev =>
+            prev.map(post =>
+                post.id === postId ? { ...post, likeCount: post.likeCount + 1 } : post
+            )
+        );
+        try{
+            await axios.get(`http://localhost:8080/api/users/posts/like/${postId}`,{withCredentials:true});
+            setLikedList(prev => [...prev,{userId,postId}]);
+        }
+        catch(e){
+            setData(prev =>
+                prev.map(post =>
+                    post.id === postId ? { ...post, likeCount: post.likeCount - 1 } : post
+                )
+            );
+            alert("Error! Please try again later.");
+        }
+    }
+
+    const handleUnlike = async(postId:string) =>{
+        setData(prev =>
+            prev.map(post =>
+                post.id === postId ? { ...post, likeCount: post.likeCount - 1 } : post
+            )
+        );
+        try{
+            await axios.delete(`http://localhost:8080/api/users/posts/unlike/${postId}`,{withCredentials:true});
+            setLikedList(prev => prev.filter(l => l.postId !== postId));
+        }
+        catch(e){
+            setData(prev =>
+                prev.map(post =>
+                    post.id === postId ? { ...post, likeCount: post.likeCount + 1 } : post
+                )
+            );
             alert("Error! Please try again later.");
         }
     }
@@ -147,7 +207,10 @@ export default function Feed(){
                         </div>
                         <div className="flex items-center gap-[2rem] text-xl">
                             <div className="flex items-center gap-2">
-                                <FaRegHeart/>
+                                {!likedList.some(like => like.postId === post.id) ? <div className="cursor-pointer" onClick={()=>handleLike(user?.id,post.id)}>
+                                    <FaRegHeart/>
+                                </div>: <div className="cursor-pointer" onClick={()=>handleUnlike(post.id)}><FaHeart/></div>
+                                }
                                 <p>{post.likeCount}</p>
                             </div>
                             <div className="flex items-center gap-2">

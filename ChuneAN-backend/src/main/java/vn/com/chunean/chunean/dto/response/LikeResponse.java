@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LikeResponse {
-    private String id;
     private String username;
     private String postId;
     private LocalDateTime createdAt;

@@ -2,8 +2,10 @@ package vn.com.chunean.chunean.repositories;
 
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import vn.com.chunean.chunean.entity.Post;
 
 import java.util.List;
@@ -49,4 +51,18 @@ public interface PostRepository extends JpaRepository<Post,String> {
                 order by p.createdAt desc
 """)
     List<Post> getPostsByUserId(String userId);
+
+    @Transactional
+    @Modifying
+    @Query("""
+                Update Post p set p.likeCount = p.likeCount + 1 where p.id = :postId
+""")
+    void updatePostLike(String postId);
+
+    @Transactional
+    @Modifying
+    @Query("""
+                Update Post p set p.likeCount = p.likeCount - 1 where p.id = :postId
+""")
+    void updatePostUnLike(String postId);
 }

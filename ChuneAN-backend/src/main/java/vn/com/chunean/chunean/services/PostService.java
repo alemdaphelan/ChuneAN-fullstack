@@ -81,4 +81,13 @@ public class PostService {
         List<Post> posts = postRepository.getPostsByUserId(userId);
         return posts.stream().map(this::mappingPostResponse).toList();
     }
+    public void updateLike(String postId){
+
+    }
+    public void updateUnLike(String postId){
+
+    }
+    public void updateComment(String postId){
+
+    }
 }
